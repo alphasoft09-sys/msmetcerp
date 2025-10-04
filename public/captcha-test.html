@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAPTCHA Test - MSME Technology Centre</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border-left: 4px solid;
+        }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .error { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .info { background: #d1ecf1; border-color: #17a2b8; color: #0c5460; }
+        button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #b91c1c; }
+        button:disabled { background: #6b7280; cursor: not-allowed; }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ CAPTCHA Test Page</h1>
+        <p>This page helps you test the CAPTCHA implementation for MSME Technology Centre.</p>
+        
+        <div id="statusContainer"></div>
+        
+        <h3>Test Actions</h3>
+        <button onclick="testConfig()">Test Configuration</button>
+        <button onclick="testVerification()">Test Verification</button>
+        <button onclick="testForm()">Test Form Submission</button>
+        <button onclick="clearLog()">Clear Log</button>
+        
+        <h3>Test Form</h3>
+        <form id="testForm" style="margin: 20px 0;">
+            <div style="margin: 10px 0;">
+                <label>Email: <input type="email" name="email" value="test@example.com" required></label>
+            </div>
+            <div style="margin: 10px 0;">
+                <label>Password: <input type="password" name="password" value="password123" required></label>
+            </div>
+            <button type="submit">Submit with CAPTCHA</button>
+        </form>
+        
+        <h3>Log</h3>
+        <div id="log" class="log"></div>
+    </div>
+
+    <script>
+        let captchaManager = null;
+        
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}\n`;
+            logDiv.textContent += logEntry;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+        
+        function showStatus(message, type = 'info') {
+            const container = document.getElementById('statusContainer');
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+            container.appendChild(statusDiv);
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+                statusDiv.remove();
+            }, 5000);
+        }
+        
+        function clearLog() {
+            document.getElementById('log').textContent = '';
+        }
+        
+        async function testConfig() {
+            log('Testing CAPTCHA configuration...');
+            try {
+                const response = await fetch('/captcha/config');
+                const data = await response.json();
+                
+                if (data.success) {
+                    log(`✅ Configuration loaded successfully`);
+                    log(`   Site Key: ${data.site_key ? 'Configured' : 'Not configured'}`);
+                    log(`   Is Local: ${data.is_local}`);
+                    log(`   Bypass Enabled: ${data.bypass_enabled}`);
+                    showStatus('Configuration test passed!', 'success');
+                } else {
+                    log(`❌ Configuration failed: ${data.message}`);
+                    showStatus('Configuration test failed!', 'error');
+                }
+            } catch (error) {
+                log(`❌ Configuration error: ${error.message}`, 'error');
+                showStatus('Configuration test error!', 'error');
+            }
+        }
+        
+        async function testVerification() {
+            log('Testing CAPTCHA verification...');
+            try {
+                // First get a token
+                const configResponse = await fetch('/captcha/config');
+                const configData = await configResponse.json();
+                
+                if (!configData.success) {
+                    log('❌ Cannot test verification - configuration failed');
+                    return;
+                }
+                
+                let token = 'localhost-bypass'; // For localhost testing
+                
+                // Try to verify
+                const verifyResponse = await fetch('/captcha/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'g-recaptcha-response': token
+                    })
+                });
+                
+                const verifyData = await verifyResponse.json();
+                
+                if (verifyData.success) {
+                    log(`✅ Verification successful! Score: ${verifyData.score}`);
+                    showStatus('Verification test passed!', 'success');
+                } else {
+                    log(`❌ Verification failed: ${verifyData.message}`);
+                    showStatus('Verification test failed!', 'error');
+                }
+            } catch (error) {
+                log(`❌ Verification error: ${error.message}`, 'error');
+                showStatus('Verification test error!', 'error');
+            }
+        }
+        
+        async function testForm() {
+            log('Testing form submission with CAPTCHA...');
+            
+            const form = document.getElementById('testForm');
+            const formData = new FormData(form);
+            
+            // Add CAPTCHA token
+            formData.append('g-recaptcha-response', 'localhost-bypass');
+            
+            try {
+                const response = await fetch('/admin/login', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log('✅ Form submission successful (CAPTCHA passed)');
+                    showStatus('Form test passed!', 'success');
+                } else {
+                    log(`❌ Form submission failed: ${data.message || 'Unknown error'}`);
+                    showStatus('Form test failed!', 'error');
+                }
+            } catch (error) {
+                log(`❌ Form submission error: ${error.message}`, 'error');
+                showStatus('Form test error!', 'error');
+            }
+        }
+        
+        // Initialize CAPTCHA manager
+        async function initCaptcha() {
+            log('Initializing CAPTCHA manager...');
+            
+            try {
+                // Load CAPTCHA script
+                const script = document.createElement('script');
+                script.src = '/js/captcha.js';
+                script.onload = () => {
+                    log('✅ CAPTCHA script loaded');
+                    
+                    // Wait for CAPTCHA manager to initialize
+                    setTimeout(() => {
+                        if (window.captchaManager) {
+                            captchaManager = window.captchaManager;
+                            log('✅ CAPTCHA manager initialized');
+                            
+                            // Add CAPTCHA to test form
+                            if (captchaManager.addToAjaxForm) {
+                                captchaManager.addToAjaxForm(document.getElementById('testForm'), 'test');
+                                log('✅ CAPTCHA added to test form');
+                            }
+                        } else {
+                            log('❌ CAPTCHA manager not found');
+                        }
+                    }, 1000);
+                };
+                script.onerror = () => {
+                    log('❌ Failed to load CAPTCHA script', 'error');
+                };
+                document.head.appendChild(script);
+            } catch (error) {
+                log(`❌ CAPTCHA initialization error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initCaptcha);
+    </script>
+</body>
+</html>

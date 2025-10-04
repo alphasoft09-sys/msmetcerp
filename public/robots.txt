@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: {{ url('/sitemap.xml') }}
+Sitemap: {{ url('/sitemap-lms.xml') }}
+
+# Disallow admin areas
+Disallow: /admin/
+Disallow: /login
+Disallow: /register
+
+# Allow public LMS content
+Allow: /lms/
+
+# Crawl delay
+Crawl-delay: 1

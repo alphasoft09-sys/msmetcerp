@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Debug Tool</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 3px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        input { padding: 8px; margin: 5px; width: 200px; }
+    </style>
+</head>
+<body>
+    <h1>Login Debug Tool</h1>
+    
+    <div class="test-section">
+        <h3>1. Test Basic Endpoint Accessibility</h3>
+        <button onclick="testEndpoint()">Test Login Endpoint</button>
+        <div id="endpoint-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>2. Test Admin Login</h3>
+        <input type="email" id="admin-email" placeholder="Admin Email" value="admin@example.com">
+        <input type="password" id="admin-password" placeholder="Admin Password" value="password">
+        <button onclick="testAdminLogin()">Test Admin Login</button>
+        <div id="admin-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>3. Test Student Login</h3>
+        <input type="email" id="student-email" placeholder="Student Email" value="student@example.com">
+        <input type="password" id="student-password" placeholder="Student Password" value="password">
+        <button onclick="testStudentLogin()">Test Student Login</button>
+        <div id="student-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>4. Test Session & CSRF</h3>
+        <button onclick="testSession()">Test Session</button>
+        <button onclick="testCsrf()">Test CSRF Token</button>
+        <button onclick="testSessionHealth()">Session Health Check</button>
+        <button onclick="clearSession()">Clear Session</button>
+        <div id="session-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>5. Check Browser Console</h3>
+        <p>Open browser developer tools (F12) and check the Console tab for detailed error messages.</p>
+        <button onclick="clearResults()">Clear All Results</button>
+    </div>
+
+    <script>
+        function showResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="result ${type}">${message}</div>`;
+        }
+
+        function clearResults() {
+            document.querySelectorAll('[id$="-result"]').forEach(el => el.innerHTML = '');
+        }
+
+        async function testSession() {
+            try {
+                showResult('session-result', 'Testing session...', 'info');
+                
+                const response = await fetch('/test-session');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('session-result', `✅ Session working! Session ID: ${data.session_id}, CSRF Token: ${data.csrf_token.substring(0, 20)}...`, 'success');
+                    console.log('Session test data:', data);
+                } else {
+                    showResult('session-result', `❌ Session test failed! Status: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                showResult('session-result', `❌ Session test error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCsrf() {
+            try {
+                showResult('session-result', 'Testing CSRF token...', 'info');
+                
+                const formData = new FormData();
+                formData.append('test_field', 'test_value_' + Date.now());
+                formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+                
+                const response = await fetch('/test-csrf', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('session-result', `✅ CSRF token valid! Received: ${data.received_value}`, 'success');
+                } else {
+                    showResult('session-result', `❌ CSRF token failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult('session-result', `❌ CSRF test error: ${error.message}`, 'error');
+            }
+        }
+
+        async function clearSession() {
+            try {
+                showResult('session-result', 'Clearing session...', 'info');
+                
+                const response = await fetch('/clear-session');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('session-result', `✅ Session cleared! ${data.message}`, 'success');
+                } else {
+                    showResult('session-result', `❌ Failed to clear session! Status: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                showResult('session-result', `❌ Clear session error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testSessionHealth() {
+            try {
+                showResult('session-result', 'Checking session health...', 'info');
+                
+                const response = await fetch('/session-health');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('session-result', `✅ Session healthy! ID: ${data.session_id}, Driver: ${data.session_driver}, Lifetime: ${data.session_lifetime}min`, 'success');
+                    console.log('Session health data:', data);
+                } else {
+                    showResult('session-result', `❌ Session health check failed! Status: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                showResult('session-result', `❌ Session health check error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testEndpoint() {
+            try {
+                showResult('endpoint-result', 'Testing endpoint...', 'info');
+                
+                const response = await fetch('/test-login-endpoint');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('endpoint-result', `✅ Endpoint accessible! Response: ${JSON.stringify(data)}`, 'success');
+                } else {
+                    showResult('endpoint-result', `❌ Endpoint error! Status: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                showResult('endpoint-result', `❌ Network error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAdminLogin() {
+            try {
+                const email = document.getElementById('admin-email').value;
+                const password = document.getElementById('admin-password').value;
+                
+                showResult('admin-result', 'Testing admin login...', 'info');
+                
+                const formData = new FormData();
+                formData.append('email', email);
+                formData.append('password', password);
+                formData.append('_token', '{{ csrf_token() }}');
+                
+                console.log('Testing admin login with:', { email, password });
+                
+                const response = await fetch('/admin/login', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    }
+                });
+                
+                console.log('Admin login response status:', response.status);
+                
+                const text = await response.text();
+                console.log('Admin login response text:', text);
+                
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    showResult('admin-result', `❌ Invalid JSON response: ${text}`, 'error');
+                    return;
+                }
+                
+                if (response.ok) {
+                    showResult('admin-result', `✅ Admin login response: ${JSON.stringify(data)}`, 'success');
+                } else {
+                    showResult('admin-result', `❌ Admin login failed: ${data.message || 'Unknown error'}`, 'error');
+                }
+            } catch (error) {
+                showResult('admin-result', `❌ Network error: ${error.message}`, 'error');
+                console.error('Admin login error:', error);
+            }
+        }
+
+        async function testStudentLogin() {
+            try {
+                const email = document.getElementById('student-email').value;
+                const password = document.getElementById('student-password').value;
+                
+                showResult('student-result', 'Testing student login...', 'info');
+                
+                const formData = new FormData();
+                formData.append('email', email);
+                formData.append('password', password);
+                formData.append('_token', '{{ csrf_token() }}');
+                
+                console.log('Testing student login with:', { email, password });
+                
+                const response = await fetch('/student/login', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    }
+                });
+                
+                console.log('Student login response status:', response.status);
+                
+                const text = await response.text();
+                console.log('Student login response text:', text);
+                
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    showResult('student-result', `❌ Invalid JSON response: ${text}`, 'error');
+                    return;
+                }
+                
+                if (response.ok) {
+                    showResult('student-result', `✅ Student login response: ${JSON.stringify(data)}`, 'success');
+                } else {
+                    showResult('student-result', `❌ Student login failed: ${data.message || 'Unknown error'}`, 'error');
+                }
+            } catch (error) {
+                showResult('student-result', `❌ Network error: ${error.message}`, 'error');
+                console.error('Student login error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

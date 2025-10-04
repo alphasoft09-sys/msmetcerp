@@ -1,0 +1,570 @@
+[
+  {
+    "id": "TC001",
+    "title": "Multi-role Authentication Success",
+    "description": "Verify that users across all roles (Faculty, Exam Cell, TC Admin, TC Head, Assessment Agency) can login successfully with correct credentials including OTP verification.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page."
+      },
+      {
+        "type": "action",
+        "description": "Enter valid username/email and password for each role one by one."
+      },
+      {
+        "type": "action",
+        "description": "Perform OTP verification when prompted."
+      },
+      {
+        "type": "action",
+        "description": "Click the login button."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user is logged in and directed to the correct dashboard per role."
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Authentication Failure with Incorrect Credentials",
+    "description": "Verify that login fails when an incorrect username, password, or OTP is provided.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page."
+      },
+      {
+        "type": "action",
+        "description": "Enter invalid username/email or password."
+      },
+      {
+        "type": "action",
+        "description": "Enter incorrect OTP if requested."
+      },
+      {
+        "type": "action",
+        "description": "Click the login button."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that login is denied and an appropriate error message is displayed."
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Role-based Access Control for Exam Schedule Visibility",
+    "description": "Verify exam schedules are visible only according to user roles and schedule statuses, adhering to access filter rules.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as Faculty and view exam schedules."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify Faculty can see only their own created schedules with statuses draft, submitted, rejected, and approved if allowed."
+      },
+      {
+        "type": "action",
+        "description": "Login as Exam Cell and view exam schedules."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify Exam Cell can see schedules submitted by Faculty and pending their approval."
+      },
+      {
+        "type": "action",
+        "description": "Login as TC Admin / TC Head and view schedules approved by Exam Cell."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify TC Admin/Head can see only Exam Cell approved schedules for further approval actions."
+      },
+      {
+        "type": "action",
+        "description": "Login as Assessment Agency and view schedules."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify Assessment Agency sees only final submissions approved by TC with appropriate permissions."
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Exam Schedule Approval Workflow Transitions",
+    "description": "Verify that the exam schedule status changes follow the defined workflow and only authorized roles can perform actions based on status.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Faculty creates schedule and saves as draft."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the schedule status is 'draft'."
+      },
+      {
+        "type": "action",
+        "description": "Faculty submits schedule."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify status changes to 'submitted' and email notification is sent to Exam Cell."
+      },
+      {
+        "type": "action",
+        "description": "Exam Cell approves the schedule."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify status changes to 'approved', notification sent to TC Admin/Head."
+      },
+      {
+        "type": "action",
+        "description": "TC Admin/Head rejects the schedule."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify status changes to 'rejected', notification sent to Faculty with reason."
+      },
+      {
+        "type": "action",
+        "description": "TC Admin/Head holds the schedule."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify status changes to 'hold', appropriate notification is triggered."
+      },
+      {
+        "type": "action",
+        "description": "Assessment Agency gives final approval."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify final approval status, email notification sent, and file number is generated correctly."
+      },
+      {
+        "type": "action",
+        "description": "Any unauthorized role tries to change schedule status."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the action is blocked with clear error message."
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "File Number Generation on Final Approval",
+    "description": "Verify unique, formatted 18-character file numbers are generated correctly on final approval by Assessment Agency including correct financial year and incrementing serial number.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Obtain an exam schedule approved by TC Admin/Head for final approval."
+      },
+      {
+        "type": "action",
+        "description": "Assessment Agency approves the exam schedule finally."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a unique 18-char file number is assigned."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify file number contains the current financial year and serial number increments properly."
+      },
+      {
+        "type": "action",
+        "description": "Submit another schedule for final approval."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a new unique serial file number increments correctly."
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Email Notification on Schedule Status Changes",
+    "description": "Verify that professional templated emails are sent automatically on schedule submission, approval (Exam Cell, TC Admin/Head), rejection, hold, and final approval.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Submit exam schedule as Faculty."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify Exam Cell receives submission notification email with correct details."
+      },
+      {
+        "type": "action",
+        "description": "Exam Cell approves schedule."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify TC Admin/Head and Faculty receive approval notification emails correctly."
+      },
+      {
+        "type": "action",
+        "description": "TC Admin/Head rejects schedule."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify Faculty receives rejection email with reason."
+      },
+      {
+        "type": "action",
+        "description": "Assessment Agency final approves schedule."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all related users receive final approval notification with file number."
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Protected Content Viewing – Image and Signature URL Protection",
+    "description": "Verify sensitive images like signatures are served via protected URLs with session token validation, no caching, and anti-copy mechanisms applied including canvas conversions.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login with valid credentials and open exam schedule view containing sensitive signature images."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify image URLs require valid session tokens, invalid sessions cannot access images."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify HTTP headers prevent caching of the protected images."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify images are rendered using canvas or equivalent method to prevent direct copying or saving."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to access image URLs from unauthorized sessions or direct browser navigation."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is denied with appropriate error or redirection to login."
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "JavaScript Page Protection against Developer Tools and Shortcuts",
+    "description": "Verify that right-click context menu, keyboard shortcuts (such as Ctrl+Shift+I, F12), copy, paste, drag actions are blocked consistently across supported browsers and security alerts/logs are generated.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open any exam schedule or sensitive content page."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to open developer tools using standard shortcuts (F12, Ctrl+Shift+I, Ctrl+Shift+J)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the shortcut is blocked and developer tools do not open or functional."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to right-click on page content."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify right-click context menu is disabled."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to copy, paste, or drag content using keyboard shortcuts and mouse actions."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify these operations are blocked and user is notified or no action occurs."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify security alert email is sent and logs are captured for these events."
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Bulk Student Data Upload with Date Format and Null Value Fixes",
+    "description": "Verify bulk student data upload accepts various date formats (including DD-MM-YYYY), converts them properly to MySQL format, handles empty columns, applies default values, and logs errors or fixes.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Prepare bulk upload CSV with mixed date formats, empty/null columns, and invalid entries."
+      },
+      {
+        "type": "action",
+        "description": "Perform bulk upload via student import interface."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify date fields are normalized to MySQL date format without errors."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify empty or null columns for key fields are assigned default/fallback values."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify invalid records are either rejected with logged error messages or handled gracefully according to logic."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify upload logs record all fixes and errors accurately."
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Secure PDF and File Serving with Access Control",
+    "description": "Verify stored PDF files and images are served through secure custom routes enforcing access control, correct MIME types, and inline display rendering.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as authorized user and request a PDF exam schedule file."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the file is served inline with correct Content-Type (application/pdf) and no download prompts if configured."
+      },
+      {
+        "type": "action",
+        "description": "Request the same file URL from an unauthorized user or without authentication."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is denied and redirected to login page with clear message."
+      },
+      {
+        "type": "action",
+        "description": "Request protected image URLs similarly."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify secure serving with token validation and access restrictions."
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Print Functionality with Temporary Protection Disable and Restoration",
+    "description": "Verify that the print function opens native print dialog, disables content protections (such as canvas and shortcut blocks) during printing, and restores all protections after printing without errors.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open an approved exam schedule page."
+      },
+      {
+        "type": "action",
+        "description": "Invoke the print function via the UI button."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify native print dialog opens."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify content protections are disabled to enable printing (e.g. canvas images render readable, keyboard shortcuts pass through)."
+      },
+      {
+        "type": "action",
+        "description": "Complete or cancel print dialog."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all protections are restored correctly after print dialog closes."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify no error or UI glitches occur during or after printing."
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Unauthorized Access Redirect and Error Message Display",
+    "description": "Verify all unauthorized or invalid accesses to protected routes redirect the user to login page with clear, user-friendly messages, and no sensitive information leaks.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt accessing protected URLs (exam schedules, images, PDFs) without login or with expired session."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify automatic redirect to login page with message indicating session expiration or access denial."
+      },
+      {
+        "type": "action",
+        "description": "Attempt actions not permitted by user role (e.g. Faculty trying to approve schedules)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user is blocked and shown a clear error message or redirected appropriately."
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Security Logging of Access Attempts and Email Sending States",
+    "description": "Verify all relevant security events like login attempts, unauthorized access, developer tool usage attempts, and status of email notifications are logged accurately for audit purposes.",
+    "category": "security",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Generate a set of login attempts including successful, failed, and brute force attempts."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all login attempts are recorded with timestamps, IP, user agent, and status."
+      },
+      {
+        "type": "action",
+        "description": "Trigger attempts to open developer tools or use forbidden shortcuts."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify these events are logged with details and security alert emails are sent."
+      },
+      {
+        "type": "action",
+        "description": "Perform exam schedule status changes that cause email notifications."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify email sending successes or failures are logged appropriately."
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Student Data Validation on Profile Creation and Editing",
+    "description": "Verify data validations are enforced correctly when creating or editing student profiles, including mandatory fields, formats, and fallback/default values for optional or null fields.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt creating a student profile with missing mandatory fields like name, roll number."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify validation errors are shown, preventing submission."
+      },
+      {
+        "type": "action",
+        "description": "Enter invalid data formats (e.g. dates, emails, phone numbers) and submit."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify appropriate validation error messages appear."
+      },
+      {
+        "type": "action",
+        "description": "Create a student with null/empty optional fields."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify system assigns default or fallback values correctly and no errors occur."
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "TC Management Role-based Functionalities",
+    "description": "Verify Training Centre management (centres, layouts, shot codes) is accessible only by authorized roles and supports full CRUD operations with validation.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as TC Admin or TC Head."
+      },
+      {
+        "type": "action",
+        "description": "Create, edit, view and delete TC Centres and layouts."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all operations succeed with correct validations."
+      },
+      {
+        "type": "action",
+        "description": "Attempt TC management access as Faculty or Exam Cell."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is denied for non-authorized roles."
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Dashboard Data and Visualization Access per Role",
+    "description": "Verify that dashboards display appropriate data and visualizations relevant to the logged-in user's role accurately.",
+    "category": "functional",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as Faculty and open dashboard."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify dashboard shows faculty-specific statistics, schedules, and charts."
+      },
+      {
+        "type": "action",
+        "description": "Login as Exam Cell and open dashboard."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify dashboard shows Exam Cell related data such as pending approvals."
+      },
+      {
+        "type": "action",
+        "description": "Repeat for TC Admin, TC Head, Assessment Agency."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify role-based data separation and accuracy in dashboard contents."
+      }
+    ]
+  }
+]

@@ -1,0 +1,97 @@
+# Laravel .htaccess with Security Enhancements
+
+# Disable directory listing
+Options -Indexes
+
+# Prevent access to sensitive files
+<Files ".env">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "composer.json">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "composer.lock">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "package.json">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "package-lock.json">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Prevent access to backup files
+<FilesMatch "\.(bak|backup|old|orig|save|swp|sql|sqlite|sqlite3)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Prevent access to log files
+<FilesMatch "\.(log|txt)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "DENY"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    
+    # Remove server information
+    Header unset Server
+    Header unset X-Powered-By
+</IfModule>
+
+# Force HTTPS (uncomment for production)
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Handle Authorization Header
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>
+
+# Redirect Trailing Slashes If Not A Folder...
+<IfModule mod_rewrite.c>
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+</IfModule>
+
+# Send Requests To Front Controller...
+<IfModule mod_rewrite.c>
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Disable server signature
+ServerSignature Off
+
+# Prevent access to hidden files
+<Files ".*">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Allow access to public assets
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>

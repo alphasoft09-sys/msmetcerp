@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AAMSME - Project Brief & User Guidelines</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background: #fff;
+        }
+        
+        .section h2 {
+            color: #495057;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .section h3 {
+            color: #6c757d;
+            margin: 25px 0 15px 0;
+            font-size: 1.4em;
+        }
+        
+        .role-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .role-card h4 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+        
+        .permission-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .permission-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .permission-list li:before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .workflow-step {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .workflow-step:before {
+            content: attr(data-step);
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #2196f3;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .table th, .table td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .table th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .warning {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+        }
+        
+        .toc {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .toc h3 {
+            margin-bottom: 15px;
+        }
+        
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .toc li {
+            padding: 5px 0;
+        }
+        
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .toc a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AAMSME</h1>
+            <p>Assessment Agency Management System for MSME</p>
+            <p>Comprehensive Project Brief & User Guidelines</p>
+        </div>
+
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#overview">1. Project Overview</a></li>
+                <li><a href="#system-architecture">2. System Architecture</a></li>
+                <li><a href="#user-roles">3. User Roles & Permissions</a></li>
+                <li><a href="#workflow">4. System Workflow</a></li>
+                <li><a href="#qualification-management">5. Qualification Management</a></li>
+                <li><a href="#exam-scheduling">6. Exam Scheduling Process</a></li>
+                <li><a href="#approval-process">7. Approval Workflow</a></li>
+                <li><a href="#student-management">8. Student Management</a></li>
+                <li><a href="#reports">9. Reports & Analytics</a></li>
+                <li><a href="#user-manual">10. User Manual</a></li>
+            </ul>
+        </div>
+
+        <div id="overview" class="section">
+            <h2>1. Project Overview</h2>
+            
+            <h3>What is AAMSME?</h3>
+            <p>AAMSME (Assessment Agency Management System for MSME) is a comprehensive web-based management system designed to streamline the assessment and certification process for MSME (Micro, Small and Medium Enterprises) training centers and assessment agencies.</p>
+            
+            <h3>Key Objectives</h3>
+            <ul>
+                <li>Centralize qualification and module management</li>
+                <li>Streamline exam scheduling and approval processes</li>
+                <li>Manage student registrations and progress tracking</li>
+                <li>Provide comprehensive reporting and analytics</li>
+                <li>Ensure data security and role-based access control</li>
+            </ul>
+            
+            <h3>Target Users</h3>
+            <ul>
+                <li><strong>Assessment Agency (AA):</strong> Primary administrators who manage qualifications, modules, and oversee the entire system</li>
+                <li><strong>TC Admin:</strong> Training center administrators who manage their centers and schedules</li>
+                <li><strong>TC Head:</strong> Training center heads who approve schedules and manage faculty</li>
+                <li><strong>Exam Cell:</strong> Personnel responsible for exam coordination and scheduling</li>
+                <li><strong>TC Faculty:</strong> Teachers who manage attendance, progress, and student interactions</li>
+            </ul>
+        </div>
+
+        <div id="system-architecture" class="section">
+            <h2>2. System Architecture</h2>
+            
+
+            
+            <h3>Core Modules</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Module</th>
+                        <th>Description</th>
+                        <th>Key Features</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Qualification Management</td>
+                        <td>Manage qualifications and their associated modules</td>
+                        <td>CRUD operations, module mapping, CSV import/export</td>
+                    </tr>
+                    <tr>
+                        <td>Exam Scheduling</td>
+                        <td>Create and manage exam schedules</td>
+                        <td>Schedule creation, approval workflow, file management</td>
+                    </tr>
+                    <tr>
+                        <td>Student Management</td>
+                        <td>Manage student registrations and progress</td>
+                        <td>Student profiles, attendance tracking, progress monitoring</td>
+                    </tr>
+                    <tr>
+                        <td>User Management</td>
+                        <td>Manage system users and permissions</td>
+                        <td>Role-based access, profile management, security</td>
+                    </tr>
+                    <tr>
+                        <td>Reporting</td>
+                        <td>Generate comprehensive reports</td>
+                        <td>Analytics, data export, dashboard views</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="user-roles" class="section">
+            <h2>3. User Roles & Permissions</h2>
+            
+            <div class="role-card">
+                <h4>Assessment Agency (Role ID: 4) - SUPER ADMIN</h4>
+                <p><strong>Primary Responsibilities:</strong> System administration, qualification management, oversight</p>
+                <ul class="permission-list">
+                    <li>Manage all qualifications and modules</li>
+                    <li>Create and edit qualification modules</li>
+                    <li>Map modules to qualifications</li>
+                    <li>Manage training centers (TC)</li>
+                    <li>View all exam schedules and reports</li>
+                    <li>Access system-wide analytics</li>
+                    <li>Manage user accounts and permissions</li>
+                    <li>Upload and manage qualification data via CSV</li>
+                    <li>Approve or reject exam schedules</li>
+                    <li>Generate comprehensive reports</li>
+                </ul>
+            </div>
+            
+            <div class="role-card">
+                <h4>TC Admin (Role ID: 1) - CENTER ADMINISTRATOR</h4>
+                <p><strong>Primary Responsibilities:</strong> Training center management, schedule coordination</p>
+                <ul class="permission-list">
+                    <li>Manage training center information</li>
+                    <li>Create and submit exam schedules</li>
+                    <li>Manage faculty assignments</li>
+                    <li>View center-specific reports</li>
+                    <li>Manage student registrations</li>
+                    <li>Coordinate with exam cell</li>
+                    <li>Track center performance metrics</li>
+                </ul>
+            </div>
+            
+            <div class="role-card">
+                <h4>TC Head (Role ID: 2) - CENTER HEAD</h4>
+                <p><strong>Primary Responsibilities:</strong> Center oversight, schedule approval</p>
+                <ul class="permission-list">
+                    <li>Approve exam schedules within center</li>
+                    <li>Review center performance</li>
+                    <li>Manage faculty assignments</li>
+                    <li>View center-specific analytics</li>
+                    <li>Coordinate with TC Admin</li>
+                    <li>Approve student registrations</li>
+                </ul>
+            </div>
+            
+            <div class="role-card">
+                <h4>Exam Cell (Role ID: 3) - EXAM COORDINATOR</h4>
+                <p><strong>Primary Responsibilities:</strong> Exam coordination, schedule management</p>
+                <ul class="permission-list">
+                    <li>Review exam schedules</li>
+                    <li>Coordinate exam logistics</li>
+                    <li>Manage exam resources</li>
+                    <li>Track exam completion status</li>
+                    <li>Generate exam reports</li>
+                    <li>Communicate with centers</li>
+                </ul>
+            </div>
+            
+            <div class="role-card">
+                <h4>TC Faculty (Role ID: 5) - TEACHER</h4>
+                <p><strong>Primary Responsibilities:</strong> Student management, progress tracking</p>
+                <ul class="permission-list">
+                    <li>Manage student attendance</li>
+                    <li>Track student progress</li>
+                    <li>Send messages to students</li>
+                    <li>View assigned modules</li>
+                    <li>Update student records</li>
+                    <li>Generate student reports</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="workflow" class="section">
+            <h2>4. System Workflow</h2>
+            
+            <h3>Overall System Flow</h3>
+            
+            <div class="workflow-step" data-step="Step 1">
+                <h4>System Setup (Assessment Agency)</h4>
+                <p>The Assessment Agency sets up the system by:</p>
+                <ul>
+                    <li>Creating qualifications and their modules</li>
+                    <li>Setting up training centers</li>
+                    <li>Creating user accounts for different roles</li>
+                    <li>Configuring system parameters</li>
+                </ul>
+            </div>
+            
+            <div class="workflow-step" data-step="Step 2">
+                <h4>Center Management (TC Admin/Head)</h4>
+                <p>Training centers are managed by:</p>
+                <ul>
+                    <li>TC Admin creating and managing center information</li>
+                    <li>TC Head overseeing center operations</li>
+                    <li>TC Faculty being assigned to specific modules</li>
+                    <li>Student registrations being processed</li>
+                </ul>
+            </div>
+            
+            <div class="workflow-step" data-step="Step 3">
+                <h4>Exam Scheduling Process</h4>
+                <p>The exam scheduling workflow involves:</p>
+                <ul>
+                    <li>TC Faculty creating exam schedules</li>
+                    <li>Exam Cell reviewing logistics and resources</li>
+                    <li>TC Head internal approval</li>
+                    <li>Assessment Agency final approval and file number generation</li>
+                </ul>
+            </div>
+            
+            <div class="workflow-step" data-step="Step 4">
+                <h4>Student Management</h4>
+                <p>Student lifecycle management includes:</p>
+                <ul>
+                    <li>Student registration and profile creation</li>
+                    <li>Attendance tracking by faculty</li>
+                    <li>Progress monitoring and updates</li>
+                    <li>Exam participation and results</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="qualification-management" class="section">
+            <h2>5. Qualification Management</h2>
+            
+            <h3>Assessment Agency Responsibilities</h3>
+            
+            <div class="highlight">
+                <h4>Creating Qualifications</h4>
+                <ol>
+                    <li><strong>Access:</strong> Login as Assessment Agency → Qualification List</li>
+                    <li><strong>Add Qualification:</strong> Click "Add Qualification" button</li>
+                    <li><strong>Fill Details:</strong>
+                        <ul>
+                            <li>Qualification Name (e.g., "Automobile Service Technician")</li>
+                            <li>NQR Number (National Qualification Register)</li>
+                            <li>Sector (e.g., "Automotive")</li>
+                            <li>Level (e.g., "Level 4")</li>
+                            <li>Type (e.g., "Certificate")</li>
+                            <li>Total Hours</li>
+                        </ul>
+                    </li>
+                    <li><strong>Save:</strong> Click "Add Qualification" to save</li>
+                </ol>
+            </div>
+            
+            <div class="highlight">
+                <h4>Managing Modules</h4>
+                <ol>
+                    <li><strong>Access:</strong> Qualification Modules section</li>
+                    <li><strong>Add Module:</strong> Click "Add Module" button</li>
+                    <li><strong>Fill Details:</strong>
+                        <ul>
+                            <li>Module Name (e.g., "Engine Maintenance")</li>
+                            <li>NOS Code (National Occupational Standard)</li>
+                            <li>Optional Module (checkbox)</li>
+                            <li>Hours (training duration)</li>
+                            <li>Credit (credit points)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Special Note:</strong> NOS Code "NA" can be duplicated for multiple modules</li>
+                </ol>
+            </div>
+            
+            <div class="highlight">
+                <h4>Mapping Modules to Qualifications</h4>
+                <ol>
+                    <li><strong>Access:</strong> Qualification List → Click "Map Modules" on any qualification</li>
+                    <li><strong>Select Modules:</strong> Check the modules that belong to this qualification</li>
+                    <li><strong>Save Mapping:</strong> Click "Save Module Mappings"</li>
+                    <li><strong>Verify:</strong> Use "View Modules" to see mapped modules</li>
+                </ol>
+            </div>
+            
+            <div class="warning">
+                <h4>Important Notes:</h4>
+                <ul>
+                    <li>Only Assessment Agency can create/edit qualifications and modules</li>
+                    <li>NOS Code "NA" is allowed for duplicate entries</li>
+                    <li>Modules must be mapped to qualifications before scheduling</li>
+                    <li>CSV import is available for bulk data entry</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="exam-scheduling" class="section">
+            <h2>6. Exam Scheduling Process</h2>
+            
+            <h3>Complete Scheduling Workflow</h3>
+            
+            <div class="workflow-step" data-step="Phase 1">
+                <h4>Schedule Creation (TC Faculty)</h4>
+                <ol>
+                    <li><strong>Login:</strong> Access system as TC Faculty</li>
+                    <li><strong>Navigate:</strong> Go to Exam Schedules section</li>
+                    <li><strong>Create Schedule:</strong> Click "Create New Schedule"</li>
+                    <li><strong>Fill Basic Details:</strong>
+                        <ul>
+                            <li>Schedule Title</li>
+                            <li>Qualification Name</li>
+                            <li>Training Center</li>
+                            <li>Exam Date and Time</li>
+                            <li>Venue Details</li>
+                        </ul>
+                    </li>
+                    <li><strong>Select Modules:</strong> Choose modules to be examined</li>
+                    <li><strong>Upload Files:</strong> Attach required documents</li>
+                    <li><strong>Submit:</strong> Click "Create Schedule"</li>
+                </ol>
+            </div>
+            
+            <div class="workflow-step" data-step="Phase 2">
+                <h4>Exam Cell Review</h4>
+                <ol>
+                    <li><strong>Notification:</strong> Exam Cell receives new schedule from TC Faculty</li>
+                    <li><strong>Logistics Check:</strong> Verify exam resources availability</li>
+                    <li><strong>Coordination:</strong> Ensure proper exam setup</li>
+                    <li><strong>Review:</strong> Check technical requirements and staff availability</li>
+                    <li><strong>Forward:</strong> Send to TC Head for internal approval</li>
+                </ol>
+            </div>
+            
+            <div class="workflow-step" data-step="Phase 3">
+                <h4>Internal Approval (TC Head)</h4>
+                <ol>
+                    <li><strong>Notification:</strong> TC Head receives schedule from Exam Cell</li>
+                    <li><strong>Review:</strong> Access schedule details and review</li>
+                    <li><strong>Check:</strong> Verify all information is correct</li>
+                    <li><strong>Approve/Reject:</strong> Click "Approve" or "Reject" with comments</li>
+                    <li><strong>If Rejected:</strong> Schedule returns to TC Faculty for correction</li>
+                </ol>
+            </div>
+            
+            <div class="workflow-step" data-step="Phase 4">
+                <h4>Final Approval (Assessment Agency)</h4>
+                <ol>
+                    <li><strong>Notification:</strong> Assessment Agency receives approved schedule from TC Head</li>
+                    <li><strong>Review:</strong> Assessment Agency reviews complete schedule</li>
+                    <li><strong>Validate:</strong> Check compliance with standards</li>
+                    <li><strong>Approve/Reject:</strong> Final decision with comments</li>
+                    <li><strong>If Approved:</strong> Generate file number and activate schedule</li>
+                    <li><strong>Notification:</strong> All stakeholders notified of approval</li>
+                </ol>
+            </div>
+            
+            <div class="success">
+                <h4>Schedule Status Tracking</h4>
+                <ul>
+                    <li><strong>Draft:</strong> Created by TC Faculty, pending exam cell review</li>
+                    <li><strong>Pending Exam Cell:</strong> Submitted for logistics review</li>
+                    <li><strong>Pending TC Head:</strong> Exam cell approved, under internal approval</li>
+                    <li><strong>Pending AA:</strong> TC Head approved, under final Assessment Agency review</li>
+                    <li><strong>Approved:</strong> Fully approved with file number generated</li>
+                    <li><strong>Rejected:</strong> Rejected at any stage, requires resubmission</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="approval-process" class="section">
+            <h2>7. Approval Workflow</h2>
+            
+            <h3>Detailed Approval Process</h3>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Stage</th>
+                        <th>Responsible Role</th>
+                        <th>Actions</th>
+                        <th>Timeline</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Schedule Creation</td>
+                        <td>TC Faculty</td>
+                        <td>Create schedule with all details</td>
+                        <td>As needed</td>
+                    </tr>
+                    <tr>
+                        <td>Exam Cell Review</td>
+                        <td>Exam Cell</td>
+                        <td>Check logistics and resources</td>
+                        <td>24-48 hours</td>
+                    </tr>
+                    <tr>
+                        <td>Internal Review</td>
+                        <td>TC Head</td>
+                        <td>Review and approve/reject</td>
+                        <td>24-48 hours</td>
+                    </tr>
+                    <tr>
+                        <td>Final Approval</td>
+                        <td>Assessment Agency</td>
+                        <td>Final validation, approval and file number generation</td>
+                        <td>48-72 hours</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Approval Criteria</h3>
+            
+            <div class="role-card">
+                <h4>TC Head Approval Criteria</h4>
+                <ul>
+                    <li>Schedule information completeness</li>
+                    <li>Module selection accuracy</li>
+                    <li>Date and time feasibility</li>
+                    <li>Venue availability</li>
+                    <li>Faculty assignment verification</li>
+                </ul>
+            </div>
+            
+            <div class="role-card">
+                <h4>Exam Cell Approval Criteria</h4>
+                <ul>
+                    <li>Exam resource availability</li>
+                    <li>Logistics coordination</li>
+                    <li>Technical requirements</li>
+                    <li>Staff availability</li>
+                    <li>Compliance with exam standards</li>
+                </ul>
+            </div>
+            
+            <div class="role-card">
+                <h4>Assessment Agency Approval Criteria</h4>
+                <ul>
+                    <li>Qualification compliance</li>
+                    <li>Module mapping accuracy</li>
+                    <li>Standard adherence</li>
+                    <li>Documentation completeness</li>
+                    <li>Overall process compliance</li>
+                </ul>
+            </div>
+            
+            <div class="warning">
+                <h4>Rejection Process</h4>
+                <p>If a schedule is rejected at any stage:</p>
+                <ol>
+                    <li>Rejection reason is recorded with comments</li>
+                    <li>Schedule returns to previous stage</li>
+                    <li>TC Faculty can modify and resubmit</li>
+                    <li>Process restarts from the rejection point</li>
+                    <li>All stakeholders are notified of changes</li>
+                </ol>
+            </div>
+        </div>
+
+        <div id="student-management" class="section">
+            <h2>8. Student Management</h2>
+            
+            <h3>Student Registration Process</h3>
+            
+            <div class="workflow-step" data-step="Registration">
+                <h4>Student Registration (TC Admin)</h4>
+                <ol>
+                    <li><strong>Access:</strong> Student Management section</li>
+                    <li><strong>Add Student:</strong> Click "Add New Student"</li>
+                    <li><strong>Fill Details:</strong>
+                        <ul>
+                            <li>Personal Information (Name, DOB, Contact)</li>
+                            <li>Educational Background</li>
+                            <li>Qualification Details</li>
+                            <li>Module Preferences</li>
+                            <li>Photo Upload</li>
+                        </ul>
+                    </li>
+                    <li><strong>Generate Credentials:</strong> System creates login credentials</li>
+                    <li><strong>Notify Student:</strong> Send credentials via email</li>
+                </ol>
+            </div>
+            
+            <h3>Faculty Management Responsibilities</h3>
+            
+            <div class="role-card">
+                <h4>Attendance Management</h4>
+                <ul>
+                    <li>Mark daily attendance for assigned students</li>
+                    <li>Track attendance percentage</li>
+                    <li>Generate attendance reports</li>
+                    <li>Notify about attendance issues</li>
+                </ul>
+            </div>
+            
+            <div class="role-card">
+                <h4>Progress Tracking</h4>
+                <ul>
+                    <li>Update student progress for each module</li>
+                    <li>Record assessment scores</li>
+                    <li>Track completion status</li>
+                    <li>Generate progress reports</li>
+                </ul>
+            </div>
+            
+            <div class="role-card">
+                <h4>Communication</h4>
+                <ul>
+                    <li>Send messages to individual students</li>
+                    <li>Send bulk messages to class</li>
+                    <li>Notify about schedule changes</li>
+                    <li>Provide feedback and guidance</li>
+                </ul>
+            </div>
+            
+            <h3>Student Portal Features</h3>
+            <ul>
+                <li><strong>Profile Management:</strong> Update personal information</li>
+                <li><strong>Schedule View:</strong> View exam schedules and timings</li>
+                <li><strong>Progress Tracking:</strong> Monitor own progress</li>
+                <li><strong>Attendance History:</strong> View attendance records</li>
+                <li><strong>Communication:</strong> Receive messages from faculty</li>
+                <li><strong>Document Access:</strong> Download relevant documents</li>
+            </ul>
+        </div>
+
+        <div id="reports" class="section">
+            <h2>9. Reports & Analytics</h2>
+            
+            <h3>Available Reports by Role</h3>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Report Type</th>
+                        <th>Assessment Agency</th>
+                        <th>TC Admin</th>
+                        <th>TC Head</th>
+                        <th>Exam Cell</th>
+                        <th>TC Faculty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Qualification Reports</td>
+                        <td>✓ Full Access</td>
+                        <td>✓ View Only</td>
+                        <td>✓ View Only</td>
+                        <td>✓ View Only</td>
+                        <td>✗ No Access</td>
+                    </tr>
+                    <tr>
+                        <td>Schedule Reports</td>
+                        <td>✓ Full Access</td>
+                        <td>✓ Center Specific</td>
+                        <td>✓ Center Specific</td>
+                        <td>✓ Full Access</td>
+                        <td>✗ No Access</td>
+                    </tr>
+                    <tr>
+                        <td>Student Reports</td>
+                        <td>✓ Full Access</td>
+                        <td>✓ Center Specific</td>
+                        <td>✓ Center Specific</td>
+                        <td>✓ View Only</td>
+                        <td>✓ Assigned Students</td>
+                    </tr>
+                    <tr>
+                        <td>Attendance Reports</td>
+                        <td>✓ Full Access</td>
+                        <td>✓ Center Specific</td>
+                        <td>✓ Center Specific</td>
+                        <td>✗ No Access</td>
+                        <td>✓ Assigned Students</td>
+                    </tr>
+                    <tr>
+                        <td>Performance Analytics</td>
+                        <td>✓ Full Access</td>
+                        <td>✓ Center Specific</td>
+                        <td>✓ Center Specific</td>
+                        <td>✓ Exam Related</td>
+                        <td>✓ Assigned Students</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Key Analytics Dashboard</h3>
+            
+            <div class="highlight">
+                <h4>Assessment Agency Dashboard</h4>
+                <ul>
+                    <li><strong>System Overview:</strong> Total qualifications, modules, centers, students</li>
+                    <li><strong>Schedule Analytics:</strong> Approval rates, processing times, rejection reasons</li>
+                    <li><strong>Performance Metrics:</strong> Center performance, student success rates</li>
+                    <li><strong>Trend Analysis:</strong> Monthly/quarterly growth patterns</li>
+                </ul>
+            </div>
+            
+            <div class="highlight">
+                <h4>Center Dashboard</h4>
+                <ul>
+                    <li><strong>Center Overview:</strong> Student count, faculty count, active schedules</li>
+                    <li><strong>Schedule Status:</strong> Pending, approved, rejected schedules</li>
+                    <li><strong>Student Performance:</strong> Attendance rates, progress tracking</li>
+                    <li><strong>Faculty Performance:</strong> Teaching assignments, student feedback</li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <div id="user-manual" class="section">
+            <h2>10. User Manual</h2>
+            
+            <h3>Getting Started</h3>
+            
+            <div class="workflow-step" data-step="Login">
+                <h4>First Time Login</h4>
+                <ol>
+                    <li><strong>Access URL:</strong> Navigate to the system URL provided</li>
+                    <li><strong>Login Credentials:</strong> Use credentials provided by system administrator</li>
+                    <li><strong>Password Change:</strong> Change password on first login</li>
+                    <li><strong>Profile Setup:</strong> Complete profile information</li>
+                    <li><strong>Dashboard Access:</strong> Access role-specific dashboard</li>
+                </ol>
+            </div>
+            
+            <h3>Navigation Guide</h3>
+            
+            <div class="highlight">
+                <h4>Main Navigation</h4>
+                <ul>
+                    <li><strong>Dashboard:</strong> Role-specific overview and quick actions</li>
+                    <li><strong>Qualifications:</strong> Manage qualifications and modules (AA only)</li>
+                    <li><strong>Exam Schedules:</strong> Create and manage exam schedules</li>
+                    <li><strong>Students:</strong> Manage student information and progress</li>
+                    <li><strong>Reports:</strong> Access analytics and reports</li>
+                    <li><strong>Profile:</strong> Manage personal profile and settings</li>
+                </ul>
+            </div>
+            
+            <h3>Common Tasks</h3>
+            
+            <div class="role-card">
+                <h4>For Assessment Agency</h4>
+                <ol>
+                    <li><strong>Setup Qualifications:</strong> Create qualifications and modules</li>
+                    <li><strong>Manage Centers:</strong> Add and configure training centers</li>
+                    <li><strong>Review Schedules:</strong> Approve exam schedules</li>
+                    <li><strong>Generate Reports:</strong> Access system-wide analytics</li>
+                </ol>
+            </div>
+            
+            <div class="role-card">
+                <h4>For TC Admin</h4>
+                <ol>
+                    <li><strong>Manage Center:</strong> Manage training center information</li>
+                    <li><strong>Manage Students:</strong> Register and manage students</li>
+                    <li><strong>Assign Faculty:</strong> Assign teachers to modules</li>
+                    <li><strong>Track Progress:</strong> Monitor center performance</li>
+                </ol>
+            </div>
+            
+            <div class="role-card">
+                <h4>For TC Faculty</h4>
+                <ol>
+                    <li><strong>Create Schedules:</strong> Submit exam schedules for approval</li>
+                    <li><strong>Mark Attendance:</strong> Daily attendance management</li>
+                    <li><strong>Update Progress:</strong> Track student progress</li>
+                    <li><strong>Send Messages:</strong> Communicate with students</li>
+                    <li><strong>Generate Reports:</strong> Create student reports</li>
+                </ol>
+            </div>
+            
+            <h3>Troubleshooting</h3>
+            
+            <div class="warning">
+                <h4>Common Issues & Solutions</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Issue</th>
+                            <th>Solution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cannot login</td>
+                            <td>Check credentials, contact admin for reset</td>
+                        </tr>
+                        <tr>
+                            <td>Form not submitting</td>
+                            <td>Check required fields, internet connection</td>
+                        </tr>
+                        <tr>
+                            <td>File upload fails</td>
+                            <td>Check file size, format, and permissions</td>
+                        </tr>
+                        <tr>
+                            <td>Schedule not visible</td>
+                            <td>Check approval status and permissions</td>
+                        </tr>
+                        <tr>
+                            <td>Reports not loading</td>
+                            <td>Check date range and data availability</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h3>Support & Contact</h3>
+            <ul>
+                <li><strong>Technical Support:</strong> Contact system administrator for technical issues</li>
+                <li><strong>Training:</strong> Request training sessions for new users</li>
+                <li><strong>Documentation:</strong> Access user guides and FAQs</li>
+                <li><strong>Feedback:</strong> Provide feedback for system improvements</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Conclusion</h2>
+            
+            <div class="success">
+                <h3>System Benefits</h3>
+                <ul>
+                    <li><strong>Streamlined Process:</strong> Automated workflow reduces manual work</li>
+                    <li><strong>Better Coordination:</strong> Clear communication between all stakeholders</li>
+                    <li><strong>Data Accuracy:</strong> Centralized data management reduces errors</li>
+                    <li><strong>Compliance:</strong> Ensures adherence to standards and regulations</li>
+                    <li><strong>Analytics:</strong> Comprehensive reporting for informed decisions</li>
+                    <li><strong>Scalability:</strong> System can grow with organization needs</li>
+                </ul>
+            </div>
+            
+            <div class="highlight">
+                <h3>Next Steps</h3>
+                <ol>
+                    <li><strong>User Training:</strong> Conduct training sessions for all roles</li>
+                    <li><strong>Pilot Testing:</strong> Run pilot with selected centers</li>
+                    <li><strong>Feedback Collection:</strong> Gather user feedback for improvements</li>
+                    <li><strong>Full Deployment:</strong> Roll out to all centers</li>
+                    <li><strong>Ongoing Support:</strong> Provide continuous support and updates</li>
+                </ol>
+            </div>
+            
+            <p style="text-align: center; margin-top: 30px; font-size: 1.1em; color: #6c757d;">
+                <strong>AAMSME - Assessment Agency Management System for MSME</strong><br>
+                Empowering MSME training centers with efficient management solutions
+            </p>
+        </div>
+    </div>
+</body>
+</html>

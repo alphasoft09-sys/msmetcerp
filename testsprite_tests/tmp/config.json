@@ -1,0 +1,18 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:8000",
+  "loginUser": "tcfaculty@gmail.com",
+  "loginPassword": "password",
+  "executionArgs": {
+    "projectName": "aamsme",
+    "projectPath": "c:/xampp8.2/htdocs/aamsme",
+    "testIds": [],
+    "additionalInstruction": "Please test the entire codebase comprehensively, including all user roles (Faculty, Exam Cell, TC Admin, TC Head, Assessment Agency), all major features like exam schedule management, student management, authentication, dashboards, and the approval workflow. Test all the tabbed interfaces, filters, modals, and CRUD operations. Also test the email notifications, file uploads, and export functionality.",
+    "envs": {
+      "API_KEY": "sk-user-vUCrACMqU33HgR7THiAL8pNTsHm1g75JnvJLzXxkUfqAOuN1FGuHzNXNE65DNNasWbE_2bFQOfQgXAekfmZeGYdHGnEo1gq7-YRx9hDoC10DcOKyye8rKVeBpHaWsElGGzs"
+    }
+  },
+  "proxy": "http://753e498c-181b-4e64-a96d-a4f37049d2d1:JRqukSrJp8JPU3pfhxO2QtqQ6xEJjwCN@tun.testsprite.com:8080"
+}

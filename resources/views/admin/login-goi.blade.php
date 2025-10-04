@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Admin Login - MSME Technology Centre, Government of India">
+    <meta name="keywords" content="MSME, Government of India, Admin Login, Technology Centre">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+         <title data-original-title="Admin Login | MSME Technology Centre | Government of India">Admin Login | MSME Technology Centre | Government of India</title>
+    
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Government of India Theme CSS -->
+    <link href="{{ asset('css/goi-theme.css') }}" rel="stylesheet">
+    
+         <!-- Fonts -->
+     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     
+     <!-- Translation Script -->
+     <script src="{{ asset('js/translation.js') }}"></script>
+     
+     <!-- CAPTCHA Script -->
+     <script src="{{ asset('js/captcha.js') }}"></script>
+    
+    <style>
+        /* Admin Specific Styles */
+        .admin-banner {
+            background: linear-gradient(135deg, #B91C1C 0%, #DC2626 100%);
+            padding: 0.5rem;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .admin-badge {
+            display: inline-block;
+            background: #FF9933;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+        }
+        
+        .chat-bubble {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #FBBF24;
+            color: #1F2937;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            max-width: 200px;
+            box-shadow: var(--shadow-md);
+            z-index: 10;
+        }
+        
+        .chat-bubble:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -8px;
+            width: 0;
+            height: 0;
+            border: 8px solid transparent;
+            border-left-color: #FBBF24;
+            border-right: 0;
+            margin-top: -8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to Content (Accessibility) -->
+    <a href="#main-content" class="skip-to-content">Skip to main content</a>
+    
+    <!-- Government Header -->
+    <header class="goi-header">
+        <div class="goi-header-content">
+            <div class="goi-emblem-section">
+                <img src="{{ asset('msme_logo/msme_logo.png') }}" alt="MSME Technology Centre" class="goi-emblem">
+                <div class="goi-title-section">
+                    <h1 class="goi-hindi-title">एमएसएमई प्रौद्योगिकी केंद्र द्वैध (एबी-एए)</h1>
+                    <h1 class="goi-title">MSME Technology Centre Dual (AB-AA)</h1>
+                    <p class="goi-subtitle">Government of India | भारत सरकार</p>
+                </div>
+            </div>
+            <div class="goi-language-switcher">
+                <button class="goi-language-btn active" data-lang="en" data-lang-code="en">English</button>
+                <button class="goi-language-btn" data-lang="hi" data-lang-code="hi">हिन्दी</button>
+                <button class="goi-language-btn" data-lang="font-size" data-action="increase">A+</button>
+                <button class="goi-language-btn" data-lang="font-size" data-action="decrease">A-</button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Admin Banner -->
+    <div class="admin-banner">
+        <i class="fas fa-shield-alt"></i> ADMINISTRATOR LOGIN PORTAL
+        <span class="admin-badge">SECURE ACCESS</span>
+    </div>
+    
+    <!-- Main Content -->
+    <main id="main-content" class="page-transition">
+        <div class="goi-login-container" style="flex: 1 0 auto;">
+            <!-- Left Side - Login Form -->
+            <div class="goi-login-left">
+                <div>
+                    <!-- Login Header -->
+                    <div class="goi-login-header">
+                        <h2><i class="fas fa-user-shield"></i> <span data-translate="Create an account">Create an account</span></h2>
+                        <p data-translate="Sign in and get started">Sign in and get started</p>
+                    </div>
+                    
+                    <!-- Alert Messages -->
+                    @include('partials.notification')
+                </div>
+                
+                <!-- Login Form -->
+                <form id="loginForm" action="{{ route('admin.login') }}" method="POST">
+                    @csrf
+                    
+                    <!-- Email Field -->
+                    <div class="goi-form-group">
+                        <label for="email" class="goi-form-label">
+                            <span data-translate="Email Address">Email Address</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="goi-form-input @error('email') error @enderror"
+                            placeholder="yourname@example.com"
+                            data-translate-placeholder="yourname@example.com"
+                            value="{{ old('email') }}"
+                            required
+                            autocomplete="email"
+                            aria-label="Email Address"
+                            aria-required="true"
+                        >
+                        <span id="emailError" class="error-text" style="color: var(--error); font-size: 0.875rem; display: none;"></span>
+                        @error('email')
+                            <span class="error-text" style="color: var(--error); font-size: 0.875rem;">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    
+                    <!-- Password Field -->
+                    <div class="goi-form-group">
+                        <label for="password" class="goi-form-label">
+                            <span data-translate="Password">Password</span>
+                        </label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="goi-form-input @error('password') error @enderror"
+                            placeholder="••••••••"
+                            required
+                            autocomplete="current-password"
+                            aria-label="Password"
+                            aria-required="true"
+                        >
+                        <span id="passwordError" class="error-text" style="color: var(--error); font-size: 0.875rem; display: none;"></span>
+                        @error('password')
+                            <span class="error-text" style="color: var(--error); font-size: 0.875rem;">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    
+                    <!-- Remember Me & Forgot Password -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" name="remember" id="remember">
+                            <span style="font-size: 0.875rem;" data-translate="Remember me">Remember me</span>
+                        </label>
+                        <a href="{{ route('admin.password.request') }}" style="font-size: 0.875rem; color: var(--primary-red); text-decoration: none;">
+                            <span data-translate="Forgot Password?">Forgot Password?</span>
+                        </a>
+                    </div>
+                    
+                                         <!-- CAPTCHA Section -->
+                     <div class="goi-form-group" style="margin-bottom: 1.5rem;">
+                         <div class="captcha-container" style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
+                             <i class="fas fa-shield-alt" style="color: var(--primary-red); font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                             <p style="margin: 0; font-size: 0.875rem; color: var(--gray-600);" data-translate="Security verification required">Security verification required</p>
+                             <div id="captcha-badge" style="margin-top: 0.5rem;"></div>
+                         </div>
+                     </div>
+                     
+                     <!-- Submit Button -->
+                     <button type="submit" id="submitBtn" class="goi-btn goi-btn-primary goi-btn-block">
+                         <span id="submitText" data-translate="Submit">Submit</span>
+                         <span id="submitLoader" style="display: none;">
+                                                          <i class="fas fa-spinner fa-spin"></i> <span data-translate="Signing In...">Signing In...</span>
+                         </span>
+                     </button>
+                </form>
+                
+                <!-- Footer Links -->
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <p style="font-size: 0.75rem; color: var(--gray-600);">
+                                                 <span data-translate="By signing in, you agree to our">By signing in, you agree to our</span> <a href="#" style="color: var(--primary-red);" data-translate="Terms & Conditions">Terms & Conditions</a> <span data-translate="and">and</span> <a href="#" style="color: var(--primary-red);" data-translate="Privacy Policy">Privacy Policy</a>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Right Side - Image and Info -->
+            <div class="goi-login-right">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop&crop=center" alt="MSME Team Collaboration">
+                
+                <!-- Chat Bubble -->
+                <div class="chat-bubble">
+                                         <strong data-translate="Welcome!">Welcome!</strong>
+                     <p style="margin-top: 0.25rem;" data-translate="Sign in to access MSME admin tools and resources.">Sign in to access MSME admin tools and resources.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="goi-footer">
+        <div class="goi-footer-content">
+            <div class="goi-footer-copyright">
+                © 2024 Ministry of MSME, Government of India
+            </div>
+            <div class="goi-footer-links">
+                <a href="#">Terms of Use</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Help</a>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            const submitLoader = document.getElementById('submitLoader');
+            
+            // Auto-hide messages handled by notification system
+            
+            // Function to refresh CSRF token
+            function refreshCsrfToken() {
+                fetch('/csrf-token', {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to refresh CSRF token');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.token) {
+                        document.querySelector('meta[name="csrf-token"]').setAttribute('content', data.token);
+                        console.log('CSRF token refreshed successfully');
+                    }
+                })
+                .catch(error => {
+                    console.error('Failed to refresh CSRF token:', error);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 5000);
+                });
+            }
+            
+            // Refresh CSRF token every 15 minutes
+            setInterval(refreshCsrfToken, 15 * 60 * 1000);
+            
+            // Also refresh on page focus
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    refreshCsrfToken();
+                }
+            });
+            
+                         // Initialize CAPTCHA for the form
+             if (window.captchaManager) {
+                 window.captchaManager.addToAjaxForm(form, 'admin_login');
+             }
+             
+             // Form submission
+             form.addEventListener('submit', function(e) {
+                 e.preventDefault();
+                
+                // Reset errors
+                document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+                document.querySelectorAll('.error-text').forEach(el => el.style.display = 'none');
+                
+                // Show loading
+                submitBtn.disabled = true;
+                submitText.style.display = 'none';
+                submitLoader.style.display = 'inline-block';
+                
+                // Get form data
+                const formData = new FormData(form);
+                
+                // Validate CSRF token
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                if (!csrfToken || csrfToken.length < 10) {
+                    console.log('Invalid CSRF token detected, refreshing...');
+                    refreshCsrfToken();
+                    showError('Session issue detected. Please try again.');
+                    resetButton();
+                    return;
+                }
+                
+                                 // Execute CAPTCHA before form submission
+                 let captchaToken = null;
+                 if (window.captchaManager && window.captchaManager.isLoaded) {
+                     captchaToken = await window.captchaManager.execute('admin_login');
+                     if (captchaToken) {
+                         formData.append('g-recaptcha-response', captchaToken);
+                     }
+                 }
+                 
+                 // Submit form
+                 fetch(form.action, {
+                     method: 'POST',
+                     body: formData,
+                     headers: {
+                         'X-Requested-With': 'XMLHttpRequest',
+                         'Accept': 'application/json',
+                         'X-CSRF-TOKEN': csrfToken
+                     }
+                 })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            let errorData = null;
+                            try {
+                                errorData = JSON.parse(text);
+                            } catch (e) {
+                                errorData = { message: `HTTP error! status: ${response.status}` };
+                            }
+                            throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message || 'Unknown error'}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    resetButton();
+                    
+                    if (data.success) {
+                        showNotification(data.message || 'Login successful! Redirecting...', 'success');
+                        setTimeout(() => {
+                            if (data.redirect_url) {
+                                window.location.href = data.redirect_url;
+                            } else {
+                                window.location.reload();
+                            }
+                        }, 1000);
+                    } else {
+                        if (data.errors) {
+                            showFieldErrors(data.errors);
+                        } else if (data.message) {
+                            showNotification(data.message, 'error');
+                        }
+                    }
+                })
+                .catch(error => {
+                    resetButton();
+                    console.error('Error:', error);
+                    
+                    if (error.message && error.message.includes('HTTP error')) {
+                        const statusMatch = error.message.match(/status: (\d+)/);
+                        const messageMatch = error.message.match(/message: (.+)$/);
+                        
+                        if (statusMatch) {
+                            const status = statusMatch[1];
+                            const serverMessage = messageMatch ? messageMatch[1] : null;
+                            
+                                                            if (serverMessage && serverMessage !== 'Unknown error') {
+                                    if (serverMessage.includes('CSRF token') || serverMessage.includes('419')) {
+                                        console.log('CSRF token mismatch detected, attempting to refresh...');
+                                        refreshCsrfToken();
+                                        showNotification('Session issue detected. Please try again.', 'warning');
+                                    } else {
+                                        showNotification(serverMessage, 'error');
+                                    }
+                                } else if (status === '419') {
+                                    console.log('419 status detected, attempting to refresh...');
+                                    refreshCsrfToken();
+                                    showNotification('Session issue detected. Please try again.', 'warning');
+                                } else if (status === '422') {
+                                    showNotification('Invalid credentials. Please check your email and password.', 'error');
+                                } else if (status === '500') {
+                                    showNotification('Server error. Please try again later.', 'error');
+                                } else if (status === '404') {
+                                    showNotification('Login endpoint not found. Please contact administrator.', 'error');
+                                } else {
+                                    showNotification(`Server error (${status}). Please try again later.`, 'error');
+                                }
+                            } else {
+                                showNotification('Server error. Please try again later.', 'error');
+                            }
+                        } else if (error.message) {
+                            showNotification(error.message, 'error');
+                        } else {
+                            showNotification('Network error. Please check your connection and try again.', 'error');
+                    }
+                });
+            });
+            
+            function resetButton() {
+                submitBtn.disabled = false;
+                submitText.style.display = 'inline-block';
+                submitLoader.style.display = 'none';
+            }
+            
+            function showError(message) {
+                console.error('Login Error:', message);
+                showNotification(message, 'error');
+            }
+            
+            function showFieldErrors(errors) {
+                // Create a list of all errors
+                const errorList = Object.keys(errors).map(field => errors[field][0]);
+                
+                // Show notification with all errors
+                if (errorList.length > 0) {
+                    showNotification('Please correct the following errors:', 'error', 0);
+                    
+                    // Create a notification with the error list
+                    const container = document.querySelector('.goi-notification-container');
+                    if (container) {
+                        const notification = document.createElement('div');
+                        notification.className = 'goi-alert goi-alert-error persistent';
+                        notification.setAttribute('role', 'alert');
+                        
+                        let errorContent = `
+                            <i class="fas fa-exclamation-circle"></i>
+                            <div class="notification-content">
+                                <ul class="mt-2 ml-4" style="margin-top: 0.5rem; margin-left: 1.25rem; list-style-type: disc;">
+                        `;
+                        
+                        errorList.forEach(error => {
+                            errorContent += `<li style="margin-bottom: 0.25rem;">${error}</li>`;
+                        });
+                        
+                        errorContent += `
+                                </ul>
+                            </div>
+                            <button type="button" class="notification-close" onclick="this.parentElement.remove();" aria-label="Close">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        `;
+                        
+                        notification.innerHTML = errorContent;
+                        container.appendChild(notification);
+                    }
+                }
+                
+                // Also mark fields as error in the form
+                Object.keys(errors).forEach(field => {
+                    const input = document.getElementById(field);
+                    const errorSpan = document.getElementById(field + 'Error');
+                    
+                    if (input) {
+                        input.classList.add('error');
+                    }
+                    
+                    if (errorSpan) {
+                        errorSpan.textContent = errors[field][0];
+                        errorSpan.style.display = 'block';
+                    }
+                });
+            }
+            
+                         // Form submission logic only - translation handled by translation.js
+        });
+    </script>
+</body>
+</html>
