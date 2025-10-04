@@ -7,13 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+            display: block;
             margin: 0;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
+            min-height: 100vh;
         }
 
         .container {
@@ -26,9 +24,10 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             background-color: #f9f9f9;
             box-sizing: border-box;
-            min-height: 297mm; /* A4 height */
-            max-height: 297mm; /* A4 height */
-            overflow: hidden;
+            min-height: auto;
+            max-height: none;
+            overflow: visible;
+            padding-bottom: 50px;
         }
 
         .styled {
@@ -57,15 +56,32 @@
         .print-orientation-buttons {
             margin: 15px 0;
             text-align: center;
-            padding: 10px;
-            background: #f8f9fa;
+            padding: 15px;
+            background: #fff !important;
             border-radius: 8px;
-            border: 1px solid #dee2e6;
+            border: 2px solid #000 !important;
+        }
+
+        .print-orientation-buttons h6 {
+            color: #000 !important;
+            font-weight: bold;
+            margin-bottom: 15px;
         }
 
         .print-orientation-buttons button {
             margin: 5px;
             min-width: 150px;
+            background-color: #fff !important;
+            color: #000 !important;
+            border: 2px solid #000 !important;
+            font-weight: bold;
+            padding: 10px 20px;
+        }
+
+        .print-orientation-buttons button:hover {
+            background-color: #f0f0f0 !important;
+            color: #000 !important;
+            border: 2px solid #000 !important;
         }
 
         @media print {
@@ -215,15 +231,25 @@
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
+                background-color: #fff !important;
+                border: 1px solid #000 !important;
+            }
+            
+            .signature-container img,
+            .signature-container canvas {
+                filter: grayscale(100%) contrast(120%) !important;
+                -webkit-filter: grayscale(100%) contrast(120%) !important;
             }
         }
 
         th {
-            background-color: #f8f9fa;
+            background-color: #fff !important;
             font-weight: 600;
             padding: 12px 16px;
             text-align: center;
             font-size: 14px;
+            color: #000 !important;
+            border-color: #000 !important;
         }
 
         td {
@@ -263,11 +289,13 @@
 
         /* Additional styling for better readability */
         .exam-table th {
-            background-color: #f8f9fa;
+            background-color: #fff !important;
             font-weight: 600;
             padding: 8px 12px;
             text-align: center;
             font-size: 11px;
+            color: #000 !important;
+            border-color: #000 !important;
         }
 
         .exam-table td {
@@ -275,34 +303,37 @@
             text-align: center;
             font-size: 11px;
             vertical-align: middle;
+            background-color: #fff !important;
+            color: #000 !important;
+            border-color: #000 !important;
         }
 
         .exam-table tr:nth-child(even) {
-            background-color: #f8f9fa;
+            background-color: #fff !important;
         }
 
         .exam-table tr:hover {
-            background-color: #e9ecef;
+            background-color: #fff !important;
         }
 
         /* Serial number styling */
         .serial-number {
             font-weight: 600;
-            color: #495057;
+            color: #000 !important;
         }
 
         /* Date styling */
         .date-cell {
             font-weight: 500;
-            color: #28a745;
+            color: #000 !important;
         }
 
         /* NOS code styling */
         .nos-code {
             font-family: 'Courier New', monospace;
             font-weight: 600;
-            color: #6f42c1;
-            background-color: #f8f9fa;
+            color: #000 !important;
+            background-color: #fff !important;
             padding: 4px 8px;
             border-radius: 4px;
         }
@@ -360,10 +391,10 @@
                 45deg,
                 transparent,
                 transparent 10px,
-                rgba(255, 0, 0, 0.05) 10px,
-                rgba(255, 0, 0, 0.05) 20px
+                rgba(0, 0, 0, 0.05) 10px,
+                rgba(0, 0, 0, 0.05) 20px
             );
-            border: 1px solid #ddd;
+            border: 1px solid #000;
             padding: 5px;
             border-radius: 3px;
             width: 130px;
@@ -371,6 +402,7 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto;
+            background-color: #fff !important;
         }
 
         .signature-watermark {
@@ -379,7 +411,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 8px;
-            color: rgba(255, 0, 0, 0.4);
+            color: rgba(0, 0, 0, 0.4);
             font-weight: bold;
             z-index: 2;
             pointer-events: none;
@@ -413,6 +445,8 @@
             height: auto;
             object-fit: contain;
             display: block;
+            filter: grayscale(100%) contrast(120%);
+            -webkit-filter: grayscale(100%) contrast(120%);
         }
 
         /* Disable image dragging */
@@ -518,10 +552,23 @@
                 padding: 0;
             }
             
-            /* Optimize for print */
+            /* Black and White Print Optimization */
             * {
                 -webkit-print-color-adjust: exact !important;
                 color-adjust: exact !important;
+                color: #000 !important;
+                background-color: transparent !important;
+            }
+            
+            body {
+                background-color: #fff !important;
+                color: #000 !important;
+            }
+            
+            table, td, th {
+                background-color: #fff !important;
+                color: #000 !important;
+                border-color: #000 !important;
             }
             
             /* Add page watermark */
@@ -558,9 +605,75 @@
             user-select: text;
         }
 
+        /* Black and White Official Document Styling */
+        * {
+            color: #000 !important;
+            background-color: transparent !important;
+        }
+        
+        body {
+            background-color: #fff !important;
+            color: #000 !important;
+        }
+        
+        table {
+            background-color: #fff !important;
+            color: #000 !important;
+        }
+        
+        td, th {
+            background-color: #fff !important;
+            color: #000 !important;
+            border-color: #000 !important;
+        }
+        
+        .btn {
+            background-color: #fff !important;
+            color: #000 !important;
+            border: 1px solid #000 !important;
+        }
+        
+        .btn:hover {
+            background-color: #f0f0f0 !important;
+            color: #000 !important;
+        }
+        
+        .alert {
+            background-color: #fff !important;
+            color: #000 !important;
+            border: 1px solid #000 !important;
+        }
+        
+        .modal-content {
+            background-color: #fff !important;
+            color: #000 !important;
+            border: 1px solid #000 !important;
+        }
+        
+        .modal-header {
+            background-color: #fff !important;
+            color: #000 !important;
+            border-bottom: 1px solid #000 !important;
+        }
+        
+        .modal-body {
+            background-color: #fff !important;
+            color: #000 !important;
+        }
+        
+        .modal-footer {
+            background-color: #fff !important;
+            color: #000 !important;
+            border-top: 1px solid #000 !important;
+        }
+
         /* Hide elements when printing */
         @media print {
             .no-print {
+                display: none !important;
+            }
+            
+            #studentListLink {
                 display: none !important;
             }
         }
@@ -1819,26 +1932,46 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Add print buttons for different orientations
-    const printButton = document.querySelector('button[onclick*="printExamSchedule"]');
+    const printButton = document.querySelector('button[onclick*="window.print"]');
     if (printButton) {
         // Create orientation buttons
         const orientationButtons = document.createElement('div');
         orientationButtons.className = 'print-orientation-buttons';
         orientationButtons.innerHTML = `
-            <h6 style="margin-bottom: 10px; color: #495057;">Choose Print Orientation:</h6>
-            <button onclick="printWithOrientation('portrait')" class="btn btn-primary me-2">
-                <i class="fas fa-print me-1"></i>Print Portrait
+            <h6 style="margin-bottom: 15px; color: #000 !important; font-weight: bold;">Choose Print Orientation:</h6>
+            <button onclick="printWithOrientation('portrait')" style="background-color: #fff !important; color: #000 !important; border: 2px solid #000 !important; font-weight: bold; padding: 10px 20px; margin: 5px; min-width: 150px;">
+                🖨️ Print Portrait
             </button>
-            <button onclick="printWithOrientation('landscape')" class="btn btn-success me-2">
-                <i class="fas fa-print me-1"></i>Print Landscape
+            <button onclick="printWithOrientation('landscape')" style="background-color: #fff !important; color: #000 !important; border: 2px solid #000 !important; font-weight: bold; padding: 10px 20px; margin: 5px; min-width: 150px;">
+                🖨️ Print Landscape
             </button>
-            <button onclick="window.print()" class="btn btn-outline-primary">
-                <i class="fas fa-print me-1"></i>Print (Browser Default)
+            <button onclick="window.print()" style="background-color: #fff !important; color: #000 !important; border: 2px solid #000 !important; font-weight: bold; padding: 10px 20px; margin: 5px; min-width: 150px;">
+                🖨️ Print (Browser Default)
             </button>
         `;
         
         // Insert after the original print button
         printButton.parentNode.insertBefore(orientationButtons, printButton.nextSibling);
+    } else {
+        // Fallback: Add orientation buttons to the container if print button not found
+        const container = document.querySelector('.container');
+        if (container) {
+            const orientationButtons = document.createElement('div');
+            orientationButtons.className = 'print-orientation-buttons';
+            orientationButtons.innerHTML = `
+                <h6 style="margin-bottom: 15px; color: #000 !important; font-weight: bold;">Choose Print Orientation:</h6>
+                <button onclick="printWithOrientation('portrait')" style="background-color: #fff !important; color: #000 !important; border: 2px solid #000 !important; font-weight: bold; padding: 10px 20px; margin: 5px; min-width: 150px;">
+                    🖨️ Print Portrait
+                </button>
+                <button onclick="printWithOrientation('landscape')" style="background-color: #fff !important; color: #000 !important; border: 2px solid #000 !important; font-weight: bold; padding: 10px 20px; margin: 5px; min-width: 150px;">
+                    🖨️ Print Landscape
+                </button>
+                <button onclick="window.print()" style="background-color: #fff !important; color: #000 !important; border: 2px solid #000 !important; font-weight: bold; padding: 10px 20px; margin: 5px; min-width: 150px;">
+                    🖨️ Print (Browser Default)
+                </button>
+            `;
+            container.appendChild(orientationButtons);
+        }
     }
 });
 </script>
