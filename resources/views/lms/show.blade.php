@@ -78,11 +78,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 200px;
         }
         
         .qr-code-display {
-            width: 150px;
-            height: 150px;
+            width: 200px;
+            height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -91,19 +92,33 @@
             border: 1px solid #dee2e6;
             margin: 0 auto;
             overflow: hidden;
+            position: relative;
         }
         
         .qr-code-display img {
-            width: 100%;
-            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
             object-fit: contain;
             border-radius: 4px;
+            display: block;
         }
         
         .qr-code-display canvas {
             border-radius: 4px;
             max-width: 100%;
             max-height: 100%;
+        }
+        
+        .qr-code-display .text-muted {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .qr-code-display .text-danger {
+            text-align: center;
+            padding: 20px;
         }
         
         .share-section {
@@ -296,7 +311,12 @@
                             <div class="text-center">
                                 <label class="form-label small fw-bold">QR Code:</label>
                                 <div class="qr-code-container">
-                                    <div id="qrCode" class="qr-code-display"></div>
+                                    <div class="qr-code-display">
+                                        <img src="https://quickchart.io/qr?text={{ urlencode(request()->url()) }}&size=200&format=png&margin=1" 
+                                             alt="QR Code for {{ $lmsSite->site_title }}" 
+                                             class="qr-code-image"
+                                             style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: 4px; display: block;">
+                                    </div>
                                 </div>
                                 
                             </div>
@@ -370,46 +390,16 @@
         }
     });
 
-    // Generate QR Code using QuickChart.io
-    function generateQRCode() {
-        const currentUrl = window.location.href;
-        const qrContainer = document.getElementById('qrCode');
-        
-        // Show loading state
-        qrContainer.innerHTML = '<div class="text-muted"><i class="fas fa-spinner fa-spin me-2"></i>Generating QR Code...</div>';
-        
-        // Use QuickChart.io API
-        const qrUrl = 'https://quickchart.io/qr?text=' + encodeURIComponent(currentUrl) + '&size=150';
-        
-        const img = document.createElement('img');
-        img.src = qrUrl;
-        img.alt = 'QR Code';
-        img.className = 'qr-code-image';
-        img.style.width = '100%';
-        img.style.height = '100%';
-        img.style.objectFit = 'contain';
-        img.style.borderRadius = '4px';
-        
-        img.onload = function() {
-            qrContainer.innerHTML = '';
-            qrContainer.appendChild(img);
-            console.log('QuickChart QR Code generated successfully');
-        };
-        
-        img.onerror = function() {
-            console.error('QuickChart QR generation failed, trying fallback...');
-            generateQRCodeFallback();
-        };
-    }
+    // QR Code is now generated server-side using direct image tag
+    // No JavaScript generation needed
 
     // Download QR Code
     document.getElementById('downloadQRBtn').addEventListener('click', function() {
-        const qrContainer = document.getElementById('qrCode');
+        const qrContainer = document.querySelector('.qr-code-display');
         const img = qrContainer.querySelector('img');
-        const canvas = qrContainer.querySelector('canvas');
         
-        if (!img && !canvas) {
-            alert('QR Code not generated yet. Please wait a moment.');
+        if (!img) {
+            alert('QR Code not available.');
             return;
         }
         
@@ -419,97 +409,24 @@
         button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Preparing...';
         button.disabled = true;
         
-        if (img) {
-            // For image-based QR code (QuickChart.io)
-            // Open QR code in new tab for user to save manually
-            window.open(img.src, '_blank');
-            
-            // Show success feedback
-            button.innerHTML = '<i class="fas fa-external-link-alt me-1"></i>Opened in new tab';
-            button.classList.remove('btn-success');
-            button.classList.add('btn-primary');
-            
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.classList.remove('btn-primary');
-                button.classList.add('btn-success');
-                button.disabled = false;
-            }, 2000);
-            
-        } else if (canvas) {
-            // For canvas-based QR code (fallback)
-            const link = document.createElement('a');
-            link.download = 'qr-code-{{ Str::slug($lmsSite->site_title) }}.png';
-            link.href = canvas.toDataURL();
-            
-            // Trigger download
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Show success feedback
-            button.innerHTML = '<i class="fas fa-check me-1"></i>Downloaded!';
-            button.classList.remove('btn-success');
-            button.classList.add('btn-primary');
-            
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.classList.remove('btn-primary');
-                button.classList.add('btn-success');
-                button.disabled = false;
-            }, 2000);
-        }
+        // Open QR code in new tab for user to save manually
+        window.open(img.src, '_blank');
+        
+        // Show success feedback
+        button.innerHTML = '<i class="fas fa-external-link-alt me-1"></i>Opened in new tab';
+        button.classList.remove('btn-success');
+        button.classList.add('btn-primary');
+        
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-success');
+            button.disabled = false;
+        }, 2000);
     });
 
-    // Generate QR code when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        // Generate QR code immediately using QuickChart.io
-        generateQRCode();
-    });
-
-    // Fallback QR code generation using Google Charts API
-    function generateQRCodeFallback() {
-        const currentUrl = window.location.href;
-        const qrContainer = document.getElementById('qrCode');
-        
-        // Show loading state
-        qrContainer.innerHTML = '<div class="text-muted"><i class="fas fa-spinner fa-spin me-2"></i>Generating QR Code...</div>';
-        
-        // Use Google Charts QR Code API as fallback
-        const qrUrl = 'https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=' + encodeURIComponent(currentUrl);
-        
-        const img = document.createElement('img');
-        img.src = qrUrl;
-        img.alt = 'QR Code';
-        img.className = 'qr-code-image';
-        img.style.width = '100%';
-        img.style.height = '100%';
-        img.style.objectFit = 'contain';
-        img.style.borderRadius = '4px';
-        
-        img.onload = function() {
-            qrContainer.innerHTML = '';
-            qrContainer.appendChild(img);
-            console.log('Google Charts QR Code generated successfully');
-        };
-        
-        img.onerror = function() {
-            qrContainer.innerHTML = '<div class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>QR Code generation failed<br><small>Please check your internet connection</small></div>';
-            addRetryButton();
-        };
-    }
-
-    // Add retry button functionality
-    function addRetryButton() {
-        const qrContainer = document.getElementById('qrCode');
-        const retryBtn = document.createElement('button');
-        retryBtn.className = 'btn btn-sm btn-outline-primary mt-2';
-        retryBtn.innerHTML = '<i class="fas fa-redo me-1"></i>Retry QR Code';
-        retryBtn.onclick = function() {
-            generateQRCode();
-        };
-        qrContainer.appendChild(retryBtn);
-    }
+    // QR Code is now generated server-side using direct image tag
+    // No JavaScript generation or fallback needed
 
 </script>
 @endpush

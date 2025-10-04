@@ -21,6 +21,25 @@
                     <p>Admin Login</p>
                 </div>
 
+                <!-- Navigation Links -->
+                <div class="navigation-links mb-4">
+                    <p class="text-center text-muted mb-2">Quick Access:</p>
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <a href="{{ route('home') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-house me-1"></i>Home
+                        </a>
+                        <a href="{{ route('public.lms.index') }}" class="btn btn-outline-info btn-sm">
+                            <i class="bi bi-book me-1"></i>LMS
+                        </a>
+                        <a href="{{ route('public.exam-schedules') }}" class="btn btn-outline-success btn-sm">
+                            <i class="bi bi-calendar-event me-1"></i>Exam Schedules
+                        </a>
+                        <a href="{{ route('student.login') }}" class="btn btn-outline-warning btn-sm">
+                            <i class="bi bi-mortarboard me-1"></i>Student Login
+                        </a>
+                    </div>
+                </div>
+
                 <!-- Error Alert -->
                 <div id="errorAlert" class="alert alert-danger d-none fade-in-up" role="alert">
                     <div id="errorMessage"></div>

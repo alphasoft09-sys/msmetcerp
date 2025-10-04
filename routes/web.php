@@ -98,6 +98,10 @@ Route::get('/api/file-number-preview/{scheduleId}', function ($scheduleId) {
 })->name('api.file-number-preview');
 
 
+// Public exam schedules page
+Route::get('/exam-schedules', [ExamScheduleController::class, 'publicIndex'])->name('public.exam-schedules');
+Route::get('/exam-schedules/{id}/view', [ExamScheduleController::class, 'publicView'])->name('public.exam-schedules.view');
+
 // Public routes for serving files (outside admin middleware)
 Route::get('/files/exam-schedules/student-details/{filename}', function ($filename) {
     $path = storage_path('app/public/exam-schedules/student-details/' . $filename);

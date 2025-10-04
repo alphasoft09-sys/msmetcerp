@@ -273,7 +273,8 @@
             <nav>
                 <ul class="nav-links">
                     <li><a href="{{ route('home') }}">Home</a></li>
-                    <li><a href="{{ route('public.lms.index') }}">LMS</a></li>
+                    <li><a href="{{ route('public.lms.index') }}" class="active">LMS</a></li>
+                    <li><a href="{{ route('public.exam-schedules') }}">Exam Schedules</a></li>
                     <li><a href="{{ route('admin.login') }}">Admin Login</a></li>
                     <li><a href="{{ route('student.login') }}">Student Login</a></li>
                 </ul>

@@ -105,6 +105,81 @@
             font-size: 0.875rem;
             color: var(--gray-700);
         }
+        
+        /* Image styling for student login */
+        .goi-login-right img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Custom Navigation Button Styles */
+        .navigation-links .btn {
+            display: inline-block !important;
+            padding: 8px 16px !important;
+            margin: 4px !important;
+            font-size: 0.875rem !important;
+            font-weight: 500 !important;
+            line-height: 1.5 !important;
+            text-align: center !important;
+            text-decoration: none !important;
+            vertical-align: middle !important;
+            cursor: pointer !important;
+            border: 2px solid !important;
+            border-radius: 20px !important;
+            transition: all 0.3s ease !important;
+            background-color: transparent !important;
+        }
+        
+        .navigation-links .btn-outline-primary {
+            color: #0d6efd !important;
+            border-color: #0d6efd !important;
+        }
+        
+        .navigation-links .btn-outline-primary:hover {
+            color: #fff !important;
+            background-color: #0d6efd !important;
+            border-color: #0d6efd !important;
+        }
+        
+        .navigation-links .btn-outline-info {
+            color: #0dcaf0 !important;
+            border-color: #0dcaf0 !important;
+        }
+        
+        .navigation-links .btn-outline-info:hover {
+            color: #fff !important;
+            background-color: #0dcaf0 !important;
+            border-color: #0dcaf0 !important;
+        }
+        
+        .navigation-links .btn-outline-success {
+            color: #198754 !important;
+            border-color: #198754 !important;
+        }
+        
+        .navigation-links .btn-outline-success:hover {
+            color: #fff !important;
+            background-color: #198754 !important;
+            border-color: #198754 !important;
+        }
+        
+        .navigation-links .btn-outline-warning {
+            color: #ffc107 !important;
+            border-color: #ffc107 !important;
+        }
+        
+        .navigation-links .btn-outline-warning:hover {
+            color: #000 !important;
+            background-color: #ffc107 !important;
+            border-color: #ffc107 !important;
+        }
+        
+        .navigation-links .btn i {
+            margin-right: 4px !important;
+        }
     </style>
 </head>
 <body>
@@ -147,6 +222,25 @@
                     <div class="goi-login-header">
                         <h2><i class="fas fa-user-graduate"></i> Create an account</h2>
                         <p>Sign in and get started</p>
+                    </div>
+
+                    <!-- Navigation Links -->
+                    <div class="navigation-links mb-4">
+                        <p class="text-center text-muted mb-2">Quick Access:</p>
+                        <div class="d-flex justify-content-center gap-2 flex-wrap">
+                            <a href="{{ route('home') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-home me-1"></i>Home
+                            </a>
+                            <a href="{{ route('public.lms.index') }}" class="btn btn-outline-info">
+                                <i class="fas fa-book me-1"></i>LMS
+                            </a>
+                            <a href="{{ route('public.exam-schedules') }}" class="btn btn-outline-success">
+                                <i class="fas fa-calendar-alt me-1"></i>Exam Schedules
+                            </a>
+                            <a href="{{ route('admin.login') }}" class="btn btn-outline-warning">
+                                <i class="fas fa-shield-alt me-1"></i>Admin Login
+                            </a>
+                        </div>
                     </div>
                     
                     <!-- Alert Messages -->
@@ -248,7 +342,9 @@
             
             <!-- Right Side - Image and Info -->
             <div class="goi-login-right">
-                <img src="https://images.unsplash.com/photo-1523240795132-0a3bf5ae7cca?w=600&h=400&fit=crop&crop=center" alt="MSME Student Learning">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop&crop=center" 
+                     alt="MSME Student Learning"
+                     onerror="this.src='{{ asset('msme_logo/msme_logo.png') }}'; this.style.objectFit='contain'; this.style.padding='20px';">
                 
                 <!-- Chat Bubble -->
                 <div class="chat-bubble">

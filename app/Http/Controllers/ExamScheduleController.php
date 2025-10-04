@@ -25,6 +25,138 @@ use Dompdf\Options;
 class ExamScheduleController extends Controller
 {
     /**
+     * Display public exam schedules page with internal and final tabs
+     */
+    public function publicIndex(Request $request)
+    {
+        // Get final exam schedules (approved with file number)
+        $finalSchedules = ExamSchedule::where('status', 'received')
+            ->whereNotNull('file_no')
+            ->whereIn('exam_type', ['Final', 'Special Final'])
+            ->with(['qualification', 'centre'])
+            ->orderBy('exam_start_date', 'desc')
+            ->get();
+
+        // Get internal exam schedules (approved)
+        $internalSchedules = ExamSchedule::where('status', 'received')
+            ->where('exam_type', 'Internal')
+            ->with(['qualification', 'centre'])
+            ->orderBy('exam_start_date', 'desc')
+            ->get();
+
+        // Get TC names for all schedules
+        $tcCodes = collect($finalSchedules)->merge($internalSchedules)->pluck('tc_code')->unique();
+        $tcUsers = User::where('user_role', 1)->whereIn('from_tc', $tcCodes)->get()->keyBy('from_tc');
+        
+        // Add TC name to each schedule
+        $finalSchedules->each(function ($schedule) use ($tcUsers) {
+            $schedule->tc_name = $tcUsers->get($schedule->tc_code)?->tc_name ?? 'N/A';
+        });
+        
+        $internalSchedules->each(function ($schedule) use ($tcUsers) {
+            $schedule->tc_name = $tcUsers->get($schedule->tc_code)?->tc_name ?? 'N/A';
+        });
+
+        return view('public.exam-schedules', compact('finalSchedules', 'internalSchedules'));
+    }
+
+    /**
+     * Display public view of individual exam schedule
+     */
+    public function publicView($id)
+    {
+        $examSchedule = ExamSchedule::with(['qualification', 'centre', 'modules'])
+            ->findOrFail($id);
+
+        // Check if the schedule is approved and accessible
+        $isAccessible = false;
+        
+        if ($examSchedule->status === 'received' && $examSchedule->file_no && in_array($examSchedule->exam_type, ['Final', 'Special Final'])) {
+            $isAccessible = true; // Final exam with file number
+        } elseif ($examSchedule->status === 'received' && $examSchedule->exam_type === 'Internal') {
+            $isAccessible = true; // Internal exam approved
+        }
+
+        if (!$isAccessible) {
+            abort(404, 'Exam schedule not found or not accessible');
+        }
+
+        // Get theory and practical modules using the existing relationship
+        $theoryModules = $examSchedule->modules->where('is_theory', true);
+        $practicalModules = $examSchedule->modules->where('is_theory', false);
+
+        // Get coordinator and manager details
+        $coordinatorUser = null;
+        $managerUser = null;
+        $examCellUser = null;
+
+        if ($examSchedule->exam_coordinator) {
+            $coordinatorUser = User::where('name', $examSchedule->exam_coordinator)->first();
+        }
+
+        if ($examSchedule->tc_manager) {
+            $managerUser = User::where('name', $examSchedule->tc_manager)->first();
+        }
+
+        // Get exam cell user (assuming there's a field for this)
+        $examCellUser = User::where('user_role', 3)->first(); // Exam cell role
+
+        // Get signatures
+        $coordinatorSignature = null;
+        $examCellSignature = null;
+        $managerSignature = null;
+
+        if ($coordinatorUser && $coordinatorUser->signature) {
+            $coordinatorSignature = '<img src="' . $coordinatorUser->signature . '" alt="Coordinator Signature" style="max-width: 120px; max-height: 60px;">';
+        }
+
+        if ($examSchedule->exam_cell_signature) {
+            $examCellSignature = '<img src="' . $examSchedule->exam_cell_signature . '" alt="Exam Cell Signature" style="max-width: 120px; max-height: 60px;">';
+        }
+
+        if ($managerUser && $managerUser->signature) {
+            $managerSignature = '<img src="' . $managerUser->signature . '" alt="Manager Signature" style="max-width: 120px; max-height: 60px;">';
+        }
+
+        // Get qualification modules for display
+        $qualificationModules = [];
+        if ($examSchedule->qualification) {
+            $qualificationModules = $examSchedule->qualification->modules()
+                ->get()
+                ->keyBy('nos_code');
+        }
+
+        // Get TC name for this schedule
+        $tcUser = User::where('user_role', 1)->where('from_tc', $examSchedule->tc_code)->first();
+        $tcName = $tcUser ? $tcUser->tc_name : 'N/A';
+
+        // Get header layout (if exists)
+        $headerLayout = null;
+        if ($examSchedule->tc_code) {
+            $headerLayout = \App\Models\TcHeaderLayout::where('tc_id', $examSchedule->tc_code)->first();
+        }
+
+        // Create a dummy user object for compatibility with the view
+        $user = (object) ['user_role' => 0]; // Public user
+
+        return view('public.exam-schedule-view', compact(
+            'examSchedule', 
+            'theoryModules', 
+            'practicalModules',
+            'coordinatorUser',
+            'managerUser',
+            'examCellUser',
+            'coordinatorSignature',
+            'examCellSignature',
+            'managerSignature',
+            'qualificationModules',
+            'headerLayout',
+            'user',
+            'tcName'
+        ));
+    }
+
+    /**
      * Display the exam schedule list for faculty
      */
     public function index(Request $request)
@@ -655,6 +787,10 @@ class ExamScheduleController extends Controller
             }
         }
 
+        // Get TC name for this schedule
+        $tcUser = User::where('user_role', 1)->where('from_tc', $examSchedule->tc_code)->first();
+        $tcName = $tcUser ? $tcUser->tc_name : 'N/A';
+
         // Log access for security monitoring
         \Log::info('Exam schedule fullview accessed', [
             'id' => $id,
@@ -664,7 +800,7 @@ class ExamScheduleController extends Controller
             'timestamp' => now()
         ]);
 
-        return view('admin.exam-schedules.fullview', compact('examSchedule', 'user', 'headerLayout', 'examCellUser', 'examCellSignature', 'managerUser', 'managerSignature', 'coordinatorUser', 'coordinatorSignature', 'qualificationModules'));
+        return view('admin.exam-schedules.fullview', compact('examSchedule', 'user', 'headerLayout', 'examCellUser', 'examCellSignature', 'managerUser', 'managerSignature', 'coordinatorUser', 'coordinatorSignature', 'qualificationModules', 'tcName'));
     }
 
     /**
@@ -1633,8 +1769,12 @@ $examSchedule->update($updateData);
                 }
             }
             
+            // Get TC name for this schedule
+            $tcUser = User::where('user_role', 1)->where('from_tc', $examSchedule->tc_code)->first();
+            $tcName = $tcUser ? $tcUser->tc_name : 'N/A';
+
             // Generate PDF using the exact same view as fullview
-            $html = view('admin.exam-schedules.fullview', compact('examSchedule', 'headerLayout', 'examCellUser', 'examCellSignature', 'managerUser', 'managerSignature', 'coordinatorUser', 'coordinatorSignature', 'qualificationModules'))->render();
+            $html = view('admin.exam-schedules.fullview', compact('examSchedule', 'headerLayout', 'examCellUser', 'examCellSignature', 'managerUser', 'managerSignature', 'coordinatorUser', 'coordinatorSignature', 'qualificationModules', 'tcName'))->render();
             
             // Create DomPDF instance
             $dompdf = new Dompdf();

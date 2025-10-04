@@ -738,6 +738,7 @@
                         <br><strong>File Number: {{ $examSchedule->file_no }}</strong>
                     @endif
                     </p>
+                    <p>TC Name: <strong>{{ $tcName }}</strong></p>
                     <p>Center: 
                         @php
                             $centerText = '';
