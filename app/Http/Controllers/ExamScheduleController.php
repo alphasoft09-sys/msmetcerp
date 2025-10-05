@@ -94,8 +94,12 @@ class ExamScheduleController extends Controller
             $coordinatorUser = User::where('name', $examSchedule->exam_coordinator)->first();
         }
 
-        if ($examSchedule->tc_manager) {
-            $managerUser = User::where('name', $examSchedule->tc_manager)->first();
+        // Get TC Head (TC Approving Authority) for this specific TC
+        $managerUser = null;
+        if ($examSchedule->tc_code) {
+            $managerUser = User::where('user_role', 2)
+                ->where('from_tc', $examSchedule->tc_code)
+                ->first();
         }
 
         // Get exam cell user for this specific TC
