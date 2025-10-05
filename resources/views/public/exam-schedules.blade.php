@@ -78,13 +78,13 @@
                                 </h3>
                                 <p class="goi-card-subtitle">Approved by Assessment Agency with File Numbers</p>
                             </div> -->
-                            <div class="goi-card-body">
+                            <div class="goi-card-body" style="min-height: 400px;">
                                 <!-- Loading Spinner -->
-                                <div id="final-loading" class="text-center py-4" style="display: none;">
-                                    <div class="spinner-border text-primary" role="status">
+                                <div id="final-loading" class="text-center py-5" style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 300px;">
+                                    <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
                                         <span class="visually-hidden">Loading...</span>
                                     </div>
-                                    <p class="mt-2">Loading exam schedules...</p>
+                                    <p class="text-muted">Loading exam schedules...</p>
                                 </div>
 
                                 <!-- Mobile Scroll Indicator -->
@@ -94,7 +94,7 @@
                                 </div>
                                 
                                 <!-- Final Examinations Table -->
-                                <div id="final-exam-table">
+                                <div id="final-exam-table" style="display: none;">
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover goi-exam-table">
                                             <thead class="table-dark">
@@ -123,7 +123,7 @@
                                 </div>
 
                                 <!-- Empty State -->
-                                <div id="final-empty-state" class="goi-empty-state" style="display: none;">
+                                <div id="final-empty-state" class="goi-empty-state" style="display: none; min-height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                     <i class="fas fa-graduation-cap fa-3x mb-3"></i>
                                     <h4>No Final Examinations Available</h4>
                                     <p>There are currently no final examinations scheduled.</p>
@@ -141,13 +141,13 @@
                                 </h3>
                                 <p class="goi-card-subtitle">Approved by TC Head</p>
                             </div> -->
-                            <div class="goi-card-body">
+                            <div class="goi-card-body" style="min-height: 400px;">
                                 <!-- Loading Spinner -->
-                                <div id="internal-loading" class="text-center py-4" style="display: none;">
-                                    <div class="spinner-border text-primary" role="status">
+                                <div id="internal-loading" class="text-center py-5" style="display: none; flex-direction: column; justify-content: center; align-items: center; min-height: 300px;">
+                                    <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
                                         <span class="visually-hidden">Loading...</span>
                                     </div>
-                                    <p class="mt-2">Loading exam schedules...</p>
+                                    <p class="text-muted">Loading exam schedules...</p>
                                 </div>
 
                                 <!-- Mobile Scroll Indicator -->
@@ -157,7 +157,7 @@
                                 </div>
                                 
                                 <!-- Internal Examinations Table -->
-                                <div id="internal-exam-table">
+                                <div id="internal-exam-table" style="display: none;">
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover goi-exam-table">
                                             <thead class="table-dark">
@@ -186,7 +186,7 @@
                                 </div>
 
                                 <!-- Empty State -->
-                                <div id="internal-empty-state" class="goi-empty-state" style="display: none;">
+                                <div id="internal-empty-state" class="goi-empty-state" style="display: none; min-height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                     <i class="fas fa-clipboard-check fa-3x mb-3"></i>
                                     <h4>No Internal Examinations Available</h4>
                                     <p>There are currently no internal examinations scheduled.</p>
@@ -862,6 +862,33 @@
     width: 2rem;
     height: 2rem;
     border-width: 0.2em;
+    animation: spin 1s linear infinite;
+}
+
+/* Enhanced loading animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Smooth transitions for content switching */
+.goi-card-body > div {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Loading state styling */
+#final-loading, #internal-loading {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+/* Empty state styling */
+.goi-empty-state {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    margin: 10px 0;
+    padding: 40px 20px;
 }
 
 /* Responsive pagination */
@@ -887,15 +914,20 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Show initial loading state for final tab
+    showLoadingState('final');
+    
     // Load initial data
     loadExamSchedules('final', 1);
     
     // Tab click handlers
     document.getElementById('final-tab').addEventListener('click', function() {
+        showLoadingState('final');
         loadExamSchedules('final', 1);
     });
     
     document.getElementById('internal-tab').addEventListener('click', function() {
+        showLoadingState('internal');
         loadExamSchedules('internal', 1);
     });
     
@@ -908,6 +940,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    function showLoadingState(type) {
+        const loadingId = type + '-loading';
+        const tableId = type + '-exam-table';
+        const emptyStateId = type + '-empty-state';
+        
+        // Show loading, hide others
+        document.getElementById(loadingId).style.display = 'flex';
+        document.getElementById(tableId).style.display = 'none';
+        document.getElementById(emptyStateId).style.display = 'none';
+    }
+    
     function loadExamSchedules(type, page) {
         const loadingId = type + '-loading';
         const tableId = type + '-exam-table';
@@ -916,7 +959,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const emptyStateId = type + '-empty-state';
         
         // Show loading
-        document.getElementById(loadingId).style.display = 'block';
+        document.getElementById(loadingId).style.display = 'flex';
         document.getElementById(tableId).style.display = 'none';
         document.getElementById(emptyStateId).style.display = 'none';
         
@@ -935,7 +978,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         document.getElementById(paginationId).innerHTML = data.pagination.html;
                     } else {
                         // Show empty state
-                        document.getElementById(emptyStateId).style.display = 'block';
+                        document.getElementById(emptyStateId).style.display = 'flex';
                         document.getElementById(paginationId).innerHTML = '';
                     }
                 } else {
@@ -945,9 +988,9 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => {
                 console.error('Error:', error);
                 document.getElementById(loadingId).style.display = 'none';
-                document.getElementById(emptyStateId).style.display = 'block';
+                document.getElementById(emptyStateId).style.display = 'flex';
                 document.getElementById(emptyStateId).innerHTML = `
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger text-center">
                         <i class="fas fa-exclamation-triangle me-2"></i>
                         Error loading exam schedules. Please try again.
                     </div>
