@@ -61,6 +61,123 @@ class ExamScheduleController extends Controller
     }
 
     /**
+     * AJAX method to fetch exam schedules with pagination
+     */
+    public function ajaxExamSchedules(Request $request)
+    {
+        $type = $request->get('type', 'final'); // 'final' or 'internal'
+        $page = $request->get('page', 1);
+        $perPage = 10; // Items per page
+
+        if ($type === 'final') {
+            // Final examinations - approved by Assessment Agency with file numbers
+            $query = ExamSchedule::where('status', 'received')
+                ->whereNotNull('file_no')
+                ->whereIn('exam_type', ['Final', 'Special Final'])
+                ->with(['qualification', 'centre']);
+        } else {
+            // Internal examinations - approved by TC Head
+            $query = ExamSchedule::where('status', 'received')
+                ->where('exam_type', 'Internal')
+                ->with(['qualification', 'centre']);
+        }
+
+        // Get total count
+        $total = $query->count();
+
+        // Get paginated results
+        $schedules = $query->skip(($page - 1) * $perPage)
+            ->take($perPage)
+            ->get();
+
+        // Get TC names for all schedules
+        $tcCodes = $schedules->pluck('tc_code')->unique();
+        $tcUsers = User::where('user_role', 1)->whereIn('from_tc', $tcCodes)->get()->keyBy('from_tc');
+        
+        $schedules->each(function ($schedule) use ($tcUsers) {
+            $schedule->tc_name = $tcUsers->get($schedule->tc_code)?->tc_name ?? 'N/A';
+        });
+
+        // Calculate pagination info
+        $totalPages = ceil($total / $perPage);
+        $hasNextPage = $page < $totalPages;
+        $hasPrevPage = $page > 1;
+
+        // Generate pagination HTML
+        $paginationHtml = $this->generateGoogleStylePagination($page, $totalPages, $type);
+
+        return response()->json([
+            'success' => true,
+            'data' => $schedules,
+            'pagination' => [
+                'current_page' => $page,
+                'total_pages' => $totalPages,
+                'total_items' => $total,
+                'per_page' => $perPage,
+                'has_next' => $hasNextPage,
+                'has_prev' => $hasPrevPage,
+                'html' => $paginationHtml
+            ]
+        ]);
+    }
+
+    /**
+     * Generate Google-style pagination HTML
+     */
+    private function generateGoogleStylePagination($currentPage, $totalPages, $type)
+    {
+        if ($totalPages <= 1) {
+            return '';
+        }
+
+        $html = '<div class="google-pagination">';
+        
+        // Previous button
+        if ($currentPage > 1) {
+            $html .= '<button class="pagination-btn prev-btn" data-page="' . ($currentPage - 1) . '" data-type="' . $type . '">';
+            $html .= '<i class="fas fa-chevron-left"></i>';
+            $html .= '</button>';
+        }
+
+        // Page numbers
+        $startPage = max(1, $currentPage - 2);
+        $endPage = min($totalPages, $currentPage + 2);
+
+        // Show first page if not in range
+        if ($startPage > 1) {
+            $html .= '<button class="pagination-btn" data-page="1" data-type="' . $type . '">1</button>';
+            if ($startPage > 2) {
+                $html .= '<span class="pagination-ellipsis">...</span>';
+            }
+        }
+
+        // Show pages in range
+        for ($i = $startPage; $i <= $endPage; $i++) {
+            $activeClass = $i === $currentPage ? 'active' : '';
+            $html .= '<button class="pagination-btn ' . $activeClass . '" data-page="' . $i . '" data-type="' . $type . '">' . $i . '</button>';
+        }
+
+        // Show last page if not in range
+        if ($endPage < $totalPages) {
+            if ($endPage < $totalPages - 1) {
+                $html .= '<span class="pagination-ellipsis">...</span>';
+            }
+            $html .= '<button class="pagination-btn" data-page="' . $totalPages . '" data-type="' . $type . '">' . $totalPages . '</button>';
+        }
+
+        // Next button
+        if ($currentPage < $totalPages) {
+            $html .= '<button class="pagination-btn next-btn" data-page="' . ($currentPage + 1) . '" data-type="' . $type . '">';
+            $html .= '<i class="fas fa-chevron-right"></i>';
+            $html .= '</button>';
+        }
+
+        $html .= '</div>';
+        
+        return $html;
+    }
+
+    /**
      * Display public view of individual exam schedule
      */
     public function publicView($id)

@@ -100,6 +100,7 @@ Route::get('/api/file-number-preview/{scheduleId}', function ($scheduleId) {
 
 // Public exam schedules page
 Route::get('/exam-schedules', [ExamScheduleController::class, 'publicIndex'])->name('public.exam-schedules');
+Route::get('/exam-schedules/ajax', [ExamScheduleController::class, 'ajaxExamSchedules'])->name('public.exam-schedules.ajax');
 Route::get('/exam-schedules/{id}/view', [ExamScheduleController::class, 'publicView'])->name('public.exam-schedules.view');
 
 // Public routes for serving files (outside admin middleware)

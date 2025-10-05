@@ -79,13 +79,22 @@
                                 <p class="goi-card-subtitle">Approved by Assessment Agency with File Numbers</p>
                             </div> -->
                             <div class="goi-card-body">
-                                @if($finalSchedules->count() > 0)
-                                    <!-- Mobile Scroll Indicator -->
-                                    <div class="mobile-scroll-indicator d-md-none">
-                                        <i class="fas fa-arrows-alt-h me-2"></i>
-                                        <span>Scroll horizontally to view all columns</span>
+                                <!-- Loading Spinner -->
+                                <div id="final-loading" class="text-center py-4" style="display: none;">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
                                     </div>
-                                    
+                                    <p class="mt-2">Loading exam schedules...</p>
+                                </div>
+
+                                <!-- Mobile Scroll Indicator -->
+                                <div class="mobile-scroll-indicator d-md-none">
+                                    <i class="fas fa-arrows-alt-h me-2"></i>
+                                    <span>Scroll horizontally to view all columns</span>
+                                </div>
+                                
+                                <!-- Final Examinations Table -->
+                                <div id="final-exam-table">
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover goi-exam-table">
                                             <thead class="table-dark">
@@ -101,53 +110,24 @@
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                @foreach($finalSchedules as $index => $schedule)
-                                                    <tr>
-                                                        <td>{{ $index + 1 }}</td>
-                                                        <td>
-                                                            <strong>{{ $schedule->course_name }}</strong>
-                                                        </td>
-                                                        <td>
-                                                            <span class="badge bg-primary">{{ $schedule->batch_code }}</span>
-                                                        </td>
-                                                        <td>
-                                                            <i class="fas fa-calendar-alt me-1"></i>
-                                                            {{ \Carbon\Carbon::parse($schedule->exam_start_date)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($schedule->exam_end_date)->format('d/m/Y') }}
-                                                        </td>
-                                                        <td>
-                                                            <i class="fas fa-university me-1"></i>
-                                                            {{ $schedule->tc_name ?? 'N/A' }}
-                                                        </td>
-                                                        <td>
-                                                            <i class="fas fa-building me-1"></i>
-                                                            {{ $schedule->centre->centre_name ?? 'N/A' }}
-                                                        </td>
-                                                        <td>
-                                                            <!-- <i class="fas fa-file-alt me-1"></i> -->
-                                                            <span class="text-primary fw-bold">{{ $schedule->file_no }}</span>
-                                                        </td>
-                                                        <td>
-                                                            <span class="badge bg-success">{{ ucfirst($schedule->exam_type) }}</span>
-                                                        </td>
-                                                        <td>
-                                                            <a href="{{ route('public.exam-schedules.view', $schedule->id) }}" class="btn btn-primary btn-sm">
-                                                                <i class="fas fa-eye me-1"></i>
-                                                                <!-- View -->
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                            <tbody id="final-exam-tbody">
+                                                <!-- Data will be loaded via AJAX -->
                                             </tbody>
                                         </table>
                                     </div>
-                                @else
-                                    <div class="goi-empty-state">
-                                        <i class="fas fa-graduation-cap fa-3x mb-3"></i>
-                                        <h4>No Final Examinations Available</h4>
-                                        <p>There are currently no final examinations scheduled.</p>
+                                    
+                                    <!-- Pagination -->
+                                    <div id="final-pagination" class="mt-4">
+                                        <!-- Pagination will be loaded via AJAX -->
                                     </div>
-                                @endif
+                                </div>
+
+                                <!-- Empty State -->
+                                <div id="final-empty-state" class="goi-empty-state" style="display: none;">
+                                    <i class="fas fa-graduation-cap fa-3x mb-3"></i>
+                                    <h4>No Final Examinations Available</h4>
+                                    <p>There are currently no final examinations scheduled.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -162,13 +142,22 @@
                                 <p class="goi-card-subtitle">Approved by TC Head</p>
                             </div> -->
                             <div class="goi-card-body">
-                                @if($internalSchedules->count() > 0)
-                                    <!-- Mobile Scroll Indicator -->
-                                    <div class="mobile-scroll-indicator d-md-none">
-                                        <i class="fas fa-arrows-alt-h me-2"></i>
-                                        <span>Scroll horizontally to view all columns</span>
+                                <!-- Loading Spinner -->
+                                <div id="internal-loading" class="text-center py-4" style="display: none;">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
                                     </div>
-                                    
+                                    <p class="mt-2">Loading exam schedules...</p>
+                                </div>
+
+                                <!-- Mobile Scroll Indicator -->
+                                <div class="mobile-scroll-indicator d-md-none">
+                                    <i class="fas fa-arrows-alt-h me-2"></i>
+                                    <span>Scroll horizontally to view all columns</span>
+                                </div>
+                                
+                                <!-- Internal Examinations Table -->
+                                <div id="internal-exam-table">
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover goi-exam-table">
                                             <thead class="table-dark">
@@ -184,53 +173,24 @@
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                @foreach($internalSchedules as $index => $schedule)
-                                                    <tr>
-                                                        <td>{{ $index + 1 }}</td>
-                                                        <td>
-                                                            <strong>{{ $schedule->course_name }}</strong>
-                                                        </td>
-                                                        <td>
-                                                            <span class="badge bg-primary">{{ $schedule->batch_code }}</span>
-                                                        </td>
-                                                        <td>
-                                                            <i class="fas fa-calendar-alt me-1"></i>
-                                                            {{ \Carbon\Carbon::parse($schedule->exam_start_date)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($schedule->exam_end_date)->format('d/m/Y') }}
-                                                        </td>
-                                                        <td>
-                                                            <i class="fas fa-university me-1"></i>
-                                                            {{ $schedule->tc_name ?? 'N/A' }}
-                                                        </td>
-                                                        <td>
-                                                            <i class="fas fa-building me-1"></i>
-                                                            {{ $schedule->centre->centre_name ?? 'N/A' }}
-                                                        </td>
-                                                        <td>
-                                                            <span class="badge bg-info">{{ ucfirst($schedule->exam_type) }}</span>
-                                                        </td>
-                                                        <td>
-                                                            <!-- <i class="fas fa-check-circle me-1"></i> -->
-                                                            <span class="text-success fw-bold">Approved by TC Head</span>
-                                                        </td>
-                                                        <td>
-                                                            <a href="{{ route('public.exam-schedules.view', $schedule->id) }}" class="btn btn-primary btn-sm">
-                                                                <i class="fas fa-eye me-1"></i>
-                                                                <!-- View -->
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                            <tbody id="internal-exam-tbody">
+                                                <!-- Data will be loaded via AJAX -->
                                             </tbody>
                                         </table>
                                     </div>
-                                @else
-                                    <div class="goi-empty-state">
-                                        <i class="fas fa-clipboard-check fa-3x mb-3"></i>
-                                        <h4>No Internal Examinations Available</h4>
-                                        <p>There are currently no internal examinations scheduled.</p>
+                                    
+                                    <!-- Pagination -->
+                                    <div id="internal-pagination" class="mt-4">
+                                        <!-- Pagination will be loaded via AJAX -->
                                     </div>
-                                @endif
+                                </div>
+
+                                <!-- Empty State -->
+                                <div id="internal-empty-state" class="goi-empty-state" style="display: none;">
+                                    <i class="fas fa-clipboard-check fa-3x mb-3"></i>
+                                    <h4>No Internal Examinations Available</h4>
+                                    <p>There are currently no internal examinations scheduled.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -823,5 +783,223 @@
         justify-content: center;
     }
 }
+
+/* Google-style Pagination */
+.google-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid #dadce0;
+    background-color: #fff;
+    color: #3c4043;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.pagination-btn:hover {
+    background-color: #f8f9fa;
+    border-color: #dadce0;
+    color: #3c4043;
+    text-decoration: none;
+}
+
+.pagination-btn.active {
+    background-color: #1a73e8;
+    border-color: #1a73e8;
+    color: #fff;
+}
+
+.pagination-btn.active:hover {
+    background-color: #1557b0;
+    border-color: #1557b0;
+    color: #fff;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.pagination-ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    color: #5f6368;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.prev-btn, .next-btn {
+    min-width: 40px;
+}
+
+.prev-btn i, .next-btn i {
+    font-size: 12px;
+}
+
+/* Loading spinner */
+.spinner-border {
+    width: 2rem;
+    height: 2rem;
+    border-width: 0.2em;
+}
+
+/* Responsive pagination */
+@media (max-width: 576px) {
+    .google-pagination {
+        gap: 4px;
+    }
+    
+    .pagination-btn {
+        min-width: 36px;
+        height: 36px;
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+    
+    .pagination-ellipsis {
+        min-width: 36px;
+        height: 36px;
+        font-size: 13px;
+    }
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Load initial data
+    loadExamSchedules('final', 1);
+    
+    // Tab click handlers
+    document.getElementById('final-tab').addEventListener('click', function() {
+        loadExamSchedules('final', 1);
+    });
+    
+    document.getElementById('internal-tab').addEventListener('click', function() {
+        loadExamSchedules('internal', 1);
+    });
+    
+    // Pagination click handlers
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('pagination-btn') && !e.target.classList.contains('active')) {
+            const page = parseInt(e.target.getAttribute('data-page'));
+            const type = e.target.getAttribute('data-type');
+            loadExamSchedules(type, page);
+        }
+    });
+    
+    function loadExamSchedules(type, page) {
+        const loadingId = type + '-loading';
+        const tableId = type + '-exam-table';
+        const tbodyId = type + '-exam-tbody';
+        const paginationId = type + '-pagination';
+        const emptyStateId = type + '-empty-state';
+        
+        // Show loading
+        document.getElementById(loadingId).style.display = 'block';
+        document.getElementById(tableId).style.display = 'none';
+        document.getElementById(emptyStateId).style.display = 'none';
+        
+        // Make AJAX request
+        fetch(`{{ route('public.exam-schedules.ajax') }}?type=${type}&page=${page}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Hide loading
+                    document.getElementById(loadingId).style.display = 'none';
+                    
+                    if (data.data.length > 0) {
+                        // Show table and populate data
+                        document.getElementById(tableId).style.display = 'block';
+                        populateTable(tbodyId, data.data, type, page);
+                        document.getElementById(paginationId).innerHTML = data.pagination.html;
+                    } else {
+                        // Show empty state
+                        document.getElementById(emptyStateId).style.display = 'block';
+                        document.getElementById(paginationId).innerHTML = '';
+                    }
+                } else {
+                    throw new Error('Failed to load data');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById(loadingId).style.display = 'none';
+                document.getElementById(emptyStateId).style.display = 'block';
+                document.getElementById(emptyStateId).innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Error loading exam schedules. Please try again.
+                    </div>
+                `;
+            });
+    }
+    
+    function populateTable(tbodyId, schedules, type, currentPage) {
+        const tbody = document.getElementById(tbodyId);
+        const perPage = 10;
+        const startIndex = (currentPage - 1) * perPage;
+        
+        tbody.innerHTML = '';
+        
+        schedules.forEach((schedule, index) => {
+            const row = document.createElement('tr');
+            const serialNumber = startIndex + index + 1;
+            
+            let statusCell = '';
+            if (type === 'internal') {
+                statusCell = '<td><span class="text-success fw-bold">Approved by TC Head</span></td>';
+            }
+            
+            row.innerHTML = `
+                <td>${serialNumber}</td>
+                <td><strong>${schedule.course_name}</strong></td>
+                <td><span class="badge bg-primary">${schedule.batch_code}</span></td>
+                <td><i class="fas fa-calendar-alt me-1"></i> ${formatDate(schedule.exam_start_date)} - ${formatDate(schedule.exam_end_date)}</td>
+                <td><i class="fas fa-university me-1"></i> ${schedule.tc_name || 'N/A'}</td>
+                <td><i class="fas fa-building me-1"></i> ${schedule.centre ? schedule.centre.centre_name : 'N/A'}</td>
+                ${type === 'final' ? `<td><span class="text-primary fw-bold">${schedule.file_no}</span></td>` : ''}
+                <td><span class="badge ${type === 'final' ? 'bg-success' : 'bg-info'}">${schedule.exam_type}</span></td>
+                ${statusCell}
+                <td>
+                    <a href="{{ route('public.exam-schedules.view', '') }}/${schedule.id}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-eye me-1"></i>
+                    </a>
+                </td>
+            `;
+            
+            tbody.appendChild(row);
+        });
+    }
+    
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    }
+});
+</script>
 @endsection
