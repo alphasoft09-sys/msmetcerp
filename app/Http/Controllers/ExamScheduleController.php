@@ -98,8 +98,13 @@ class ExamScheduleController extends Controller
             $managerUser = User::where('name', $examSchedule->tc_manager)->first();
         }
 
-        // Get exam cell user (assuming there's a field for this)
-        $examCellUser = User::where('user_role', 3)->first(); // Exam cell role
+        // Get exam cell user for this specific TC
+        $examCellUser = null;
+        if ($examSchedule->tc_code) {
+            $examCellUser = User::where('user_role', 3)
+                ->where('from_tc', $examSchedule->tc_code)
+                ->first();
+        }
 
         // Get signatures
         $coordinatorSignature = null;
