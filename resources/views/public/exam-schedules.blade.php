@@ -982,7 +982,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td><span class="badge ${type === 'final' ? 'bg-success' : 'bg-info'}">${schedule.exam_type}</span></td>
                 ${statusCell}
                 <td>
-                    <a href="{{ route('public.exam-schedules.view', '') }}/${schedule.id}" class="btn btn-primary btn-sm">
+                    <a href="/exam-schedules/${schedule.id}/view" class="btn btn-primary btn-sm">
                         <i class="fas fa-eye me-1"></i>
                     </a>
                 </td>
