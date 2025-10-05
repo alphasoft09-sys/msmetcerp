@@ -35,6 +35,7 @@
     <a href="#main-content" class="skip-to-content">Skip to main content</a>
     
     @include('layouts.goi-header')
+    @include('layouts.goi-navigation')
     
     @yield('content')
     
