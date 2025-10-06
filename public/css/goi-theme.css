@@ -65,14 +65,14 @@ body {
 }
 
 /* Government Header */
-.goi-header {
+.goi-header-unique {
     background: var(--white);
     border-bottom: 2px solid var(--primary-red);
     box-shadow: var(--shadow-sm);
     padding: 0.5rem 0;
 }
 
-.goi-header-content {
+.goi-header-content-unique {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1rem;
@@ -81,37 +81,37 @@ body {
     justify-content: space-between;
 }
 
-.goi-emblem-section {
+.goi-emblem-section-unique {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.goi-emblem {
+.goi-emblem-unique {
     height: 60px;
     width: auto;
     max-width: 300px;
 }
 
-.goi-title-section {
+.goi-title-section-unique {
     display: flex;
     flex-direction: column;
 }
 
-.goi-title {
+.goi-title-unique {
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--primary-red);
     line-height: 1.2;
 }
 
-.goi-subtitle {
+.goi-subtitle-unique {
     font-size: 0.75rem;
     color: var(--gray-600);
     margin-top: 0.125rem;
 }
 
-.goi-hindi-title {
+.goi-hindi-title-unique {
     font-size: 1rem;
     color: var(--primary-red);
     font-weight: 600;
@@ -522,22 +522,22 @@ main {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .goi-header-content {
+    .goi-header-content-unique {
         flex-direction: column;
         text-align: center;
         gap: 1rem;
     }
     
-    .goi-emblem-section {
+    .goi-emblem-section-unique {
         flex-direction: column;
     }
     
-    .goi-emblem {
+    .goi-emblem-unique {
         height: 50px;
         max-width: 250px;
     }
     
-    .goi-title {
+    .goi-title-unique {
         font-size: 1.25rem;
     }
     
@@ -663,13 +663,13 @@ html {
 }
 
 /* Language Switcher */
-.goi-language-switcher {
+.goi-language-switcher-unique {
     display: flex;
     gap: 0.5rem;
     align-items: center;
 }
 
-.goi-language-btn {
+.goi-language-btn-unique {
     padding: 0.25rem 0.75rem;
     background: var(--white);
     border: 1px solid var(--gray-300);
@@ -679,11 +679,11 @@ html {
     transition: all 0.3s ease;
 }
 
-.goi-language-btn:hover {
+.goi-language-btn-unique:hover {
     background: var(--gray-100);
 }
 
-.goi-language-btn.active {
+.goi-language-btn-unique.active {
     background: var(--primary-red);
     color: var(--white);
     border-color: var(--primary-red);
