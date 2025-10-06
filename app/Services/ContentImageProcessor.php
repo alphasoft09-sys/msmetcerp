@@ -4,9 +4,75 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class ContentImageProcessor
 {
+    private $imageManager;
+
+    public function __construct()
+    {
+        $this->imageManager = new ImageManager(new Driver());
+    }
+
+    /**
+     * Compress image data
+     */
+    private function compressImage($imageData, $imageType, $quality = 80, $maxWidth = 1920, $maxHeight = 1080)
+    {
+        try {
+            // Create image from binary data
+            $image = $this->imageManager->read($imageData);
+            
+            // Get original dimensions
+            $originalWidth = $image->width();
+            $originalHeight = $image->height();
+            
+            \Log::info("Original image size: {$originalWidth}x{$originalHeight}");
+            
+            // Resize if too large
+            if ($originalWidth > $maxWidth || $originalHeight > $maxHeight) {
+                $image->scaleDown($maxWidth, $maxHeight);
+                \Log::info("Resized image to: {$image->width()}x{$image->height()}");
+            }
+            
+            // Compress based on image type
+            $compressedData = null;
+            switch (strtolower($imageType)) {
+                case 'jpeg':
+                case 'jpg':
+                    $compressedData = $image->toJpeg($quality);
+                    break;
+                case 'png':
+                    // For PNG, use lower quality (0-9, where 9 is best compression)
+                    $pngQuality = max(0, 9 - ($quality / 10));
+                    $compressedData = $image->toPng($pngQuality);
+                    break;
+                case 'webp':
+                    $compressedData = $image->toWebp($quality);
+                    break;
+                default:
+                    // For other formats, try to convert to JPEG
+                    $compressedData = $image->toJpeg($quality);
+                    break;
+            }
+            
+            $originalSize = strlen($imageData);
+            $compressedSize = strlen($compressedData);
+            $compressionRatio = round((1 - $compressedSize / $originalSize) * 100, 2);
+            
+            \Log::info("Image compressed: {$originalSize} bytes -> {$compressedSize} bytes ({$compressionRatio}% reduction)");
+            
+            return $compressedData;
+            
+        } catch (\Exception $e) {
+            \Log::error('Image compression failed: ' . $e->getMessage());
+            // Return original data if compression fails
+            return $imageData;
+        }
+    }
+
     /**
      * Process content and extract base64 images to files
      */
@@ -38,11 +104,15 @@ class ContentImageProcessor
             $directory = 'lms-content-images/' . $lmsSiteId;
             Storage::disk('public')->makeDirectory($directory);
             
-            // Decode and save the image
+            // Decode the image
             $imageData = base64_decode($base64Data);
+            
+            // Compress the image before saving
+            $compressedImageData = $this->compressImage($imageData, $imageType);
+            
             $filePath = $directory . '/' . $filename;
             
-            if (Storage::disk('public')->put($filePath, $imageData)) {
+            if (Storage::disk('public')->put($filePath, $compressedImageData)) {
                 $publicUrl = Storage::disk('public')->url($filePath);
                 // Fix double slash issue
                 $publicUrl = str_replace('//storage', '/storage', $publicUrl);

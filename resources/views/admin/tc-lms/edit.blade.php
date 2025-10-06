@@ -364,6 +364,59 @@ window.addEventListener('load', function() {
             button.disabled = false;
         }
         
+        // Function to compress images in content
+        function compressImagesInContent(content) {
+            return new Promise((resolve) => {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = content;
+                const images = tempDiv.querySelectorAll('img[src^="data:image"]');
+                
+                if (images.length === 0) {
+                    resolve(content);
+                    return;
+                }
+                
+                let processedImages = 0;
+                const totalImages = images.length;
+                
+                images.forEach((img, index) => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const imgElement = new Image();
+                    
+                    imgElement.onload = function() {
+                        // Calculate new dimensions (max 1920x1080)
+                        let { width, height } = imgElement;
+                        const maxWidth = 1920;
+                        const maxHeight = 1080;
+                        
+                        if (width > maxWidth || height > maxHeight) {
+                            const ratio = Math.min(maxWidth / width, maxHeight / height);
+                            width *= ratio;
+                            height *= ratio;
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        // Draw and compress
+                        ctx.drawImage(imgElement, 0, 0, width, height);
+                        
+                        // Convert to compressed JPEG (80% quality)
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                        img.src = compressedDataUrl;
+                        
+                        processedImages++;
+                        if (processedImages === totalImages) {
+                            resolve(tempDiv.innerHTML);
+                        }
+                    };
+                    
+                    imgElement.src = img.src;
+                });
+            });
+        }
+
         // Listen for content from iframe
         window.addEventListener('message', function(event) {
             if (event.data.type === 'suneditor-content') {
@@ -371,18 +424,22 @@ window.addEventListener('load', function() {
                 
                 // Debug: Log the content being sent
                 console.log('Content being saved:', event.data.content.substring(0, 200) + '...');
-                console.log('Content length:', event.data.content.length);
                 
-                // Update hidden input
-                document.getElementById('site-contents-input').value = event.data.content;
-                
-                // Show saving message
-                const message = status === 'submitted' ? 'Submitting for approval...' : 'Saving draft...';
-                showAlert(message, 'info');
-                
-                // Submit form via AJAX
-                const form = document.getElementById('site-form');
-                const formData = new FormData(form);
+                // Compress images before sending
+                compressImagesInContent(event.data.content).then(compressedContent => {
+                    console.log('Content after compression:', compressedContent.substring(0, 200) + '...');
+                    console.log('Content length after compression:', compressedContent.length);
+                    
+                    // Update hidden input with compressed content
+                    document.getElementById('site-contents-input').value = compressedContent;
+                    
+                    // Show saving message
+                    const message = status === 'submitted' ? 'Submitting for approval...' : 'Saving draft...';
+                    showAlert(message, 'info');
+                    
+                    // Submit form via AJAX
+                    const form = document.getElementById('site-form');
+                    const formData = new FormData(form);
                 
                 // Add status to form data
                 formData.append('status', status);
@@ -476,6 +533,7 @@ window.addEventListener('load', function() {
                     
                     showAlert(errorMessage, 'danger');
                 });
+                }); // Close the compressImagesInContent Promise
             }
         });
         
