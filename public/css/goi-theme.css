@@ -268,6 +268,134 @@ body {
     font-size: 1rem;
 }
 
+/* OTP Specific Styles */
+.goi-otp-info {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--gray-50);
+    border-radius: 8px;
+    border: 1px solid var(--gray-200);
+}
+
+.goi-otp-info p {
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+    color: var(--gray-700);
+}
+
+.goi-masked-contact {
+    font-weight: 600;
+    color: var(--primary-red) !important;
+    font-size: 1rem !important;
+}
+
+.goi-otp-input-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 1rem 0;
+}
+
+.goi-otp-single-input {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    border: 2px solid var(--gray-300);
+    border-radius: 8px;
+    background: var(--white);
+    transition: all 0.3s ease;
+}
+
+.goi-otp-single-input:focus {
+    outline: none;
+    border-color: var(--primary-red);
+    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
+}
+
+.goi-otp-single-input:invalid {
+    border-color: var(--error);
+}
+
+.goi-form-back-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-200);
+}
+
+.goi-back-link {
+    color: var(--primary-red);
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.goi-back-link:hover {
+    color: var(--dark-red);
+    text-decoration: none;
+}
+
+.goi-back-link i {
+    font-size: 0.9rem;
+}
+
+.goi-resend-otp {
+    text-align: center;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: var(--gray-50);
+    border-radius: 8px;
+    border: 1px solid var(--gray-200);
+}
+
+.goi-resend-otp p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+.goi-resend-otp a {
+    color: var(--primary-red);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.goi-resend-otp a:hover {
+    text-decoration: underline;
+}
+
+.goi-security-tips {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--gray-50);
+    border-radius: 8px;
+    border: 1px solid var(--gray-200);
+}
+
+.goi-security-tips h6 {
+    margin: 0 0 0.5rem 0;
+    color: var(--gray-700);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.goi-security-tips ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    font-size: 0.8rem;
+    color: var(--gray-600);
+}
+
+.goi-security-tips li {
+    margin: 0.25rem 0;
+}
+
 .goi-btn-clean {
     width: 100%;
     background: var(--primary-red);

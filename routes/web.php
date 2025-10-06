@@ -225,7 +225,7 @@ Route::get('/session-health', function() {
 
     // OTP verification routes
     Route::get('/verify-otp', function() {
-        return view('admin.verify-otp-goi');
+        return view('admin.verify-otp-clean');
     })->name('admin.verify-otp');
     Route::post('/verify-otp', [OtpController::class, 'verifyOtp'])->name('admin.verify-otp.post')->middleware('captcha');
     Route::post('/resend-otp', [OtpController::class, 'resendOtp'])->name('admin.resend-otp');
