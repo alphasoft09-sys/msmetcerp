@@ -62,7 +62,7 @@
         .content-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 1.5rem 0;
+            padding: 0.75rem 0;
             margin-bottom: 0;
         }
         
@@ -219,18 +219,18 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
-                    <h1 class="h2 fw-bold mb-2">{{ $lmsSite->site_title }}</h1>
-                    <p class="mb-2">{{ $lmsSite->site_description }}</p>
-                    <div class="d-flex flex-wrap gap-2">
-                        <span class="badge bg-light text-dark fs-6">
+                    <h1 class="h3 fw-bold mb-1">{{ $lmsSite->site_title }}</h1>
+                    <p class="mb-1">{{ $lmsSite->site_description }}</p>
+                    <div class="d-flex flex-wrap gap-1">
+                        <span class="badge bg-light text-dark" style="font-size: 0.7rem;">
                             <i class="fas fa-building me-1"></i>
                             {{ $lmsSite->site_department }}
                         </span>
-                        <span class="badge bg-light text-dark fs-6">
+                        <span class="badge bg-light text-dark" style="font-size: 0.7rem;">
                             <i class="fas fa-chalkboard-teacher me-1"></i>
                             {{ $lmsSite->faculty->name }}
                         </span>
-                        <span class="badge bg-light text-dark fs-6">
+                        <span class="badge bg-light text-dark" style="font-size: 0.7rem;">
                             <i class="fas fa-calendar me-1"></i>
                             {{ $lmsSite->created_at->format('M d, Y') }}
                         </span>
