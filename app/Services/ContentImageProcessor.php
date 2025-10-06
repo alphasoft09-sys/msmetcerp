@@ -102,28 +102,97 @@ class ContentImageProcessor
             
             // Create directory if it doesn't exist
             $directory = 'lms-content-images/' . $lmsSiteId;
-            Storage::disk('public')->makeDirectory($directory);
             
-            // Decode the image
-            $imageData = base64_decode($base64Data);
-            
-            // Compress the image before saving
-            $compressedImageData = $this->compressImage($imageData, $imageType);
-            
-            $filePath = $directory . '/' . $filename;
-            
-            if (Storage::disk('public')->put($filePath, $compressedImageData)) {
+            try {
+                // Check if storage is writable
+                if (!Storage::disk('public')->exists('/')) {
+                    \Log::error('Storage disk is not accessible or writable');
+                    throw new \Exception('Storage disk is not accessible');
+                }
+                
+                // Make directory and check if it was created
+                Storage::disk('public')->makeDirectory($directory);
+                if (!Storage::disk('public')->exists($directory)) {
+                    \Log::error('Failed to create directory: ' . $directory);
+                    throw new \Exception('Failed to create directory');
+                }
+                
+                // Decode the image
+                $imageData = base64_decode($base64Data);
+                if (!$imageData) {
+                    \Log::error('Failed to decode base64 data');
+                    throw new \Exception('Invalid base64 data');
+                }
+                
+                // Compress the image before saving
+                $compressedImageData = $this->compressImage($imageData, $imageType);
+                
+                $filePath = $directory . '/' . $filename;
+                
+                // Check disk free space if possible
+                if (function_exists('disk_free_space')) {
+                    $freeSpace = disk_free_space(storage_path('app/public'));
+                    $imageSize = strlen($compressedImageData);
+                    if ($freeSpace < $imageSize) {
+                        \Log::error("Not enough disk space. Required: {$imageSize}, Available: {$freeSpace}");
+                        throw new \Exception('Not enough disk space');
+                    }
+                }
+                
+                // Put file with error checking
+                $result = Storage::disk('public')->put($filePath, $compressedImageData);
+                if (!$result) {
+                    \Log::error('Storage::put returned false for: ' . $filePath);
+                    throw new \Exception('Failed to write file');
+                }
+                
+                // Verify file was actually created
+                if (!Storage::disk('public')->exists($filePath)) {
+                    \Log::error('File was not created after put operation: ' . $filePath);
+                    throw new \Exception('File was not created');
+                }
+                
+                // Get file size to verify
+                $savedSize = Storage::disk('public')->size($filePath);
+                if ($savedSize <= 0) {
+                    \Log::error('File was created but has zero size: ' . $filePath);
+                    throw new \Exception('File has zero size');
+                }
+                
+                // Get public URL
                 $publicUrl = Storage::disk('public')->url($filePath);
+                
+                // Fix URL issues
+                $appUrl = config('app.url');
+                
+                // If APP_URL doesn't end with a slash, add it
+                if (substr($appUrl, -1) !== '/') {
+                    $appUrl .= '/';
+                }
+                
+                // If URL is relative, make it absolute
+                if (substr($publicUrl, 0, 1) === '/') {
+                    $publicUrl = $appUrl . ltrim($publicUrl, '/');
+                }
+                
                 // Fix double slash issue
                 $publicUrl = str_replace('//storage', '/storage', $publicUrl);
+                
+                // Log the URL generation
+                \Log::info('Generated URL: ' . $publicUrl);
+                \Log::info('APP_URL: ' . config('app.url'));
+                
                 \Log::info('Image saved successfully: ' . $publicUrl);
+                \Log::info('File size: ' . $savedSize . ' bytes');
+                
                 // Return the public URL
                 return $publicUrl;
+            } catch (\Exception $e) {
+                \Log::error('Failed to save image: ' . $filePath . ' - Error: ' . $e->getMessage());
+                \Log::error('Exception trace: ' . $e->getTraceAsString());
+                // If saving failed, return original data URL
+                return $matches[0];
             }
-            
-            \Log::error('Failed to save image: ' . $filePath);
-            // If saving failed, return original data URL
-            return $matches[0];
         }, $content);
         
         \Log::info("Total images processed: {$imageCount}");
