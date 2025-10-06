@@ -332,6 +332,10 @@ window.addEventListener('load', function() {
         });
         
         function saveContent(status) {
+            console.log('=== SAVE CONTENT FUNCTION CALLED ===');
+            console.log('Status:', status);
+            alert('Save content function called with status: ' + status);
+            
             const saveBtn = document.getElementById('save-draft-btn');
             const submitBtn = document.getElementById('submit-btn');
             
