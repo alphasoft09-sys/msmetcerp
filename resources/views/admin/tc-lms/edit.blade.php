@@ -446,9 +446,9 @@ window.addEventListener('load', function() {
                     const formData = new FormData();
                 
                 // Get the actual values from the LMS site data
-                const siteTitle = '{{ $tcLm->site_title }}';
-                const siteDepartment = '{{ $tcLm->site_department }}';
-                const siteDescription = '{{ $tcLm->site_description }}';
+                const siteTitle = {!! json_encode($tcLm->site_title) !!};
+                const siteDepartment = {!! json_encode($tcLm->site_department) !!};
+                const siteDescription = {!! json_encode($tcLm->site_description) !!};
                 const siteContents = document.getElementById('site-contents-input').value;
                 
                 console.log('LMS Site Data:');
