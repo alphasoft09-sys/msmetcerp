@@ -159,24 +159,15 @@ class ContentImageProcessor
                     throw new \Exception('File has zero size');
                 }
                 
-                // Get public URL
-                $publicUrl = Storage::disk('public')->url($filePath);
+                // Get the server's domain from the request
+                $serverUrl = request()->getSchemeAndHttpHost();
+                \Log::info('Server URL: ' . $serverUrl);
                 
-                // Fix URL issues
-                $appUrl = config('app.url');
+                // Create direct URL to the file using server domain
+                $publicUrl = $serverUrl . '/storage/' . $filePath;
                 
-                // If APP_URL doesn't end with a slash, add it
-                if (substr($appUrl, -1) !== '/') {
-                    $appUrl .= '/';
-                }
-                
-                // If URL is relative, make it absolute
-                if (substr($publicUrl, 0, 1) === '/') {
-                    $publicUrl = $appUrl . ltrim($publicUrl, '/');
-                }
-                
-                // Fix double slash issue
-                $publicUrl = str_replace('//storage', '/storage', $publicUrl);
+                // Fix any double slashes in the path part (but not in the protocol)
+                $publicUrl = preg_replace('#([^:])//+#', '$1/', $publicUrl);
                 
                 // Log the URL generation
                 \Log::info('Generated URL: ' . $publicUrl);

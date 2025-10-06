@@ -408,8 +408,49 @@ class PublicLmsController extends Controller
         if (!$lmsSite) {
             abort(404, 'Content not found or not approved for public access.');
         }
+        
+        // Fix image URLs in content if needed
+        if ($lmsSite->site_contents) {
+            $lmsSite->site_contents = $this->fixImageUrls($lmsSite->site_contents);
+        }
 
         return view('lms.show', compact('lmsSite'));
+    }
+    
+    /**
+     * Fix image URLs in content to ensure they work on the server
+     */
+    private function fixImageUrls($content)
+    {
+        if (empty($content)) {
+            return $content;
+        }
+        
+        \Log::info('Fixing image URLs in content');
+        
+        // Get the server's domain
+        $serverUrl = request()->getSchemeAndHttpHost();
+        
+        // Find image tags with src attributes
+        $pattern = '/<img[^>]*src=["\']([^"\']*)["\'][^>]*>/i';
+        
+        $fixedContent = preg_replace_callback($pattern, function($matches) use ($serverUrl) {
+            $originalUrl = $matches[1];
+            $fixedUrl = $originalUrl;
+            
+            \Log::info('Found image URL: ' . $originalUrl);
+            
+            // If it's a relative URL starting with /storage
+            if (strpos($originalUrl, '/storage/') === 0) {
+                $fixedUrl = $serverUrl . $originalUrl;
+                \Log::info('Fixed to absolute URL: ' . $fixedUrl);
+            }
+            
+            // Replace the URL in the img tag
+            return str_replace($originalUrl, $fixedUrl, $matches[0]);
+        }, $content);
+        
+        return $fixedContent;
     }
 
     /**
@@ -420,6 +461,11 @@ class PublicLmsController extends Controller
         $lmsSite = TcLms::where('site_url', $siteUrl)
             ->with('faculty')
             ->firstOrFail();
+            
+        // Fix image URLs in content if needed
+        if ($lmsSite->site_contents) {
+            $lmsSite->site_contents = $this->fixImageUrls($lmsSite->site_contents);
+        }
 
         return view('lms.preview', compact('lmsSite'));
     }
@@ -433,10 +479,16 @@ class PublicLmsController extends Controller
             ->where('status', 'approved')
             ->where('is_approved', true)
             ->firstOrFail();
+            
+        // Fix image URLs in content if needed
+        $content = $lmsSite->site_contents;
+        if ($content) {
+            $content = $this->fixImageUrls($content);
+        }
 
         return response()->json([
             'success' => true,
-            'content' => $lmsSite->site_contents,
+            'content' => $content,
             'title' => $lmsSite->site_title,
             'description' => $lmsSite->site_description
         ]);
