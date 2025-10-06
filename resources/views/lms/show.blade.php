@@ -62,7 +62,7 @@
         .content-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 3rem 0;
+            padding: 1.5rem 0;
             margin-bottom: 0;
         }
         
@@ -219,8 +219,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
-                    <h1 class="display-4 fw-bold mb-3">{{ $lmsSite->site_title }}</h1>
-                    <p class="lead mb-3">{{ $lmsSite->site_description }}</p>
+                    <h1 class="h2 fw-bold mb-2">{{ $lmsSite->site_title }}</h1>
+                    <p class="mb-2">{{ $lmsSite->site_description }}</p>
                     <div class="d-flex flex-wrap gap-2">
                         <span class="badge bg-light text-dark fs-6">
                             <i class="fas fa-building me-1"></i>

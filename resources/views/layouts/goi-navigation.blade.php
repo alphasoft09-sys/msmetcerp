@@ -34,7 +34,7 @@
     padding: 0;
     align-items: center;
     justify-content: center;
-    height: 40px;
+    height: 30px;
 }
 
 .goi-nav-links li {
@@ -43,10 +43,10 @@
 
 .goi-nav-link {
     display: block;
-    padding: 8px 16px;
+    padding: 4px 12px;
     color: #ffffff;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 12px;
     transition: all 0.2s ease;
 }
 

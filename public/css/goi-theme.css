@@ -67,9 +67,9 @@ body {
 /* Government Header */
 .goi-header-unique {
     background: var(--white);
-    border-bottom: 2px solid var(--primary-red);
+    border-bottom: 1px solid var(--primary-red);
     box-shadow: var(--shadow-sm);
-    padding: 0.5rem 0;
+    padding: 0.25rem 0;
 }
 
 .goi-header-content-unique {
@@ -84,13 +84,13 @@ body {
 .goi-emblem-section-unique {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .goi-emblem-unique {
-    height: 60px;
+    height: 35px;
     width: auto;
-    max-width: 300px;
+    max-width: 200px;
 }
 
 .goi-title-section-unique {
@@ -99,22 +99,24 @@ body {
 }
 
 .goi-title-unique {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-size: 0.9rem;
+    font-weight: 600;
     color: var(--primary-red);
-    line-height: 1.2;
+    line-height: 1.1;
+    margin: 0;
 }
 
 .goi-subtitle-unique {
-    font-size: 0.75rem;
+    font-size: 0.6rem;
     color: var(--gray-600);
-    margin-top: 0.125rem;
+    margin: 0;
 }
 
 .goi-hindi-title-unique {
-    font-size: 1rem;
+    font-size: 0.8rem;
     color: var(--primary-red);
-    font-weight: 600;
+    font-weight: 500;
+    margin: 0;
 }
 
 /* Clean Login Container */
