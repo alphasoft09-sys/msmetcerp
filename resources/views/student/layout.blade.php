@@ -15,6 +15,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    @include('layouts.goi-navigation')
+    
     <!-- Mobile Toggle Button -->
     <button class="mobile-toggle" type="button" id="sidebarToggle">
         <i class="bi bi-list" style="font-size: 1.25rem;"></i>
