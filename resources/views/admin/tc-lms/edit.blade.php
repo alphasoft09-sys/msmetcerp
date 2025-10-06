@@ -441,13 +441,50 @@ window.addEventListener('load', function() {
                     const form = document.getElementById('site-form');
                     const formData = new FormData();
                 
+                // Debug: Check hidden input values first
+                const siteTitleInput = document.querySelector('input[name="site_title"]');
+                const siteDepartmentInput = document.querySelector('input[name="site_department"]');
+                const siteDescriptionInput = document.querySelector('input[name="site_description"]');
+                const siteContentsInput = document.getElementById('site-contents-input');
+                
+                console.log('Hidden input elements found:');
+                console.log('site_title input:', siteTitleInput);
+                console.log('site_title value:', siteTitleInput ? siteTitleInput.value : 'NOT FOUND');
+                console.log('site_department input:', siteDepartmentInput);
+                console.log('site_department value:', siteDepartmentInput ? siteDepartmentInput.value : 'NOT FOUND');
+                console.log('site_description input:', siteDescriptionInput);
+                console.log('site_description value:', siteDescriptionInput ? siteDescriptionInput.value : 'NOT FOUND');
+                console.log('site_contents input:', siteContentsInput);
+                console.log('site_contents value:', siteContentsInput ? siteContentsInput.value : 'NOT FOUND');
+                
                 // Manually add all required fields
                 formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
                 formData.append('_method', 'PUT');
-                formData.append('site_title', document.querySelector('input[name="site_title"]').value);
-                formData.append('site_department', document.querySelector('input[name="site_department"]').value);
-                formData.append('site_description', document.querySelector('input[name="site_description"]').value);
-                formData.append('site_contents', document.getElementById('site-contents-input').value);
+                
+                if (siteTitleInput) {
+                    formData.append('site_title', siteTitleInput.value);
+                } else {
+                    console.error('site_title input not found!');
+                }
+                
+                if (siteDepartmentInput) {
+                    formData.append('site_department', siteDepartmentInput.value);
+                } else {
+                    console.error('site_department input not found!');
+                }
+                
+                if (siteDescriptionInput) {
+                    formData.append('site_description', siteDescriptionInput.value);
+                } else {
+                    console.error('site_description input not found!');
+                }
+                
+                if (siteContentsInput) {
+                    formData.append('site_contents', siteContentsInput.value);
+                } else {
+                    console.error('site_contents input not found!');
+                }
+                
                 formData.append('status', status);
                 
                 // Debug: Log all form data
