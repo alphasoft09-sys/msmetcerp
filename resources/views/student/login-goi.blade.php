@@ -186,8 +186,6 @@
     <!-- Skip to Content (Accessibility) -->
     <a href="#main-content" class="skip-to-content">Skip to main content</a>
     
-    @include('layouts.goi-navigation')
-    
     <!-- Government Header -->
     <header class="goi-header">
         <div class="goi-header-content">
@@ -207,6 +205,8 @@
             </div>
         </div>
     </header>
+    
+    @include('layouts.goi-navigation')
     
     <!-- Student Banner -->
     <div class="student-banner">
