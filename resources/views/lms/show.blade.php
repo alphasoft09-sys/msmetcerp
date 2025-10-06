@@ -16,6 +16,9 @@
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 2rem;
+            overflow-x: auto; /* Add horizontal scrolling */
+            word-wrap: break-word; /* Break long words */
+            overflow-wrap: break-word; /* Modern browsers */
         }
         
         .lms-content h1, .lms-content h2, .lms-content h3, 
@@ -23,6 +26,7 @@
             margin-top: 2rem;
             margin-bottom: 1rem;
             font-weight: 600;
+            max-width: 100%; /* Constrain headers */
         }
         
         .lms-content img {
@@ -31,12 +35,16 @@
             border-radius: 8px;
             margin: 1rem 0;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: block; /* Prevent inline issues */
         }
         
         .lms-content table {
             width: 100%;
             border-collapse: collapse;
             margin: 1.5rem 0;
+            display: block; /* For proper scrolling */
+            overflow-x: auto; /* Horizontal scroll for tables */
+            max-width: 100%; /* Ensure tables don't break layout */
         }
         
         .lms-content table, .lms-content th, .lms-content td {
@@ -46,6 +54,62 @@
         .lms-content th, .lms-content td {
             padding: 12px;
             text-align: left;
+            white-space: normal; /* Allow text wrapping in cells */
+            word-break: break-word; /* Break long words in cells */
+        }
+        
+        /* Prevent content from overflowing */
+        .lms-content p, .lms-content div, .lms-content ul, .lms-content ol {
+            max-width: 100%;
+            overflow-wrap: break-word;
+        }
+        
+        /* Handle pre and code blocks */
+        .lms-content pre, .lms-content code {
+            white-space: pre-wrap; /* Preserve spaces but wrap */
+            word-wrap: break-word;
+            max-width: 100%;
+            overflow-x: auto;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+            font-family: monospace;
+        }
+        
+        /* Content container for better containment */
+        .content-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+        
+        /* Fix for very long URLs and text strings */
+        .lms-content a {
+            word-break: break-all;
+            max-width: 100%;
+            display: inline-block;
+        }
+        
+        /* Additional fixes for common overflow issues */
+        .lms-content iframe, 
+        .lms-content embed,
+        .lms-content object,
+        .lms-content video {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* Specific fix for PHP code blocks and syntax highlighting */
+        .lms-content .hljs,
+        .lms-content .highlight,
+        .lms-content pre[class*="language-"],
+        .lms-content code[class*="language-"] {
+            max-width: 100%;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
         
         .lms-content th {
@@ -197,6 +261,8 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             overflow: hidden;
             margin-top: 0;
+            width: 100%;
+            max-width: 100%;
         }
     </style>
 @endpush
@@ -247,15 +313,17 @@
                 <div class="row">
                     <div class="col-lg-8">
                         <article class="lms-content">
-                            @if($lmsSite->site_contents && !empty(trim($lmsSite->site_contents)))
-                                {!! $lmsSite->site_contents !!}
-                            @else
-                                <div class="text-center py-5">
-                                    <i class="fas fa-file-text display-1 text-muted"></i>
-                                    <h3 class="mt-3 text-muted">Content Coming Soon</h3>
-                                    <p class="text-muted">This educational content is being prepared and will be available soon.</p>
-                                </div>
-                            @endif
+                            <div class="content-container">
+                                @if($lmsSite->site_contents && !empty(trim($lmsSite->site_contents)))
+                                    {!! $lmsSite->site_contents !!}
+                                @else
+                                    <div class="text-center py-5">
+                                        <i class="fas fa-file-text display-1 text-muted"></i>
+                                        <h3 class="mt-3 text-muted">Content Coming Soon</h3>
+                                        <p class="text-muted">This educational content is being prepared and will be available soon.</p>
+                                    </div>
+                                @endif
+                            </div>
                         </article>
                     </div>
                 
@@ -356,6 +424,50 @@
 <!-- QR Code generation using QuickChart.io API -->
 
 <script>
+    // Handle content overflow issues dynamically
+    document.addEventListener('DOMContentLoaded', function() {
+        // Fix any overflowing elements
+        const contentContainer = document.querySelector('.content-container');
+        if (contentContainer) {
+            // Find all potentially overflowing elements
+            const tables = contentContainer.querySelectorAll('table');
+            const preBlocks = contentContainer.querySelectorAll('pre');
+            const codeBlocks = contentContainer.querySelectorAll('code');
+            const images = contentContainer.querySelectorAll('img');
+            
+            // Ensure tables don't overflow
+            tables.forEach(table => {
+                if (table.offsetWidth > contentContainer.offsetWidth) {
+                    table.style.display = 'block';
+                    table.style.overflowX = 'auto';
+                    table.style.maxWidth = '100%';
+                }
+            });
+            
+            // Ensure pre blocks don't overflow
+            preBlocks.forEach(pre => {
+                pre.style.maxWidth = '100%';
+                pre.style.overflowX = 'auto';
+                pre.style.whiteSpace = 'pre-wrap';
+                pre.style.wordWrap = 'break-word';
+            });
+            
+            // Ensure code blocks don't overflow
+            codeBlocks.forEach(code => {
+                code.style.maxWidth = '100%';
+                code.style.overflowX = 'auto';
+                code.style.whiteSpace = 'pre-wrap';
+                code.style.wordWrap = 'break-word';
+            });
+            
+            // Ensure images don't overflow
+            images.forEach(img => {
+                img.style.maxWidth = '100%';
+                img.style.height = 'auto';
+            });
+        }
+    });
+
     // Font size adjustment
     document.querySelectorAll('[data-lang="font-size"]').forEach(button => {
         button.addEventListener('click', function() {
