@@ -704,6 +704,47 @@
                 margin: 0 !important;
                 padding: 0 !important;
             }
+            
+            /* Remove all margins and padding from the printable area */
+            #printableArea {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+                text-align: left !important;
+            }
+            
+            /* Ensure the table takes full width */
+            .MsoTableGrid {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                text-align: left !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+            
+            /* Remove any left margin from table cells */
+            .MsoTableGrid td {
+                margin: 0 !important;
+                padding: 5mm !important;
+            }
+            
+            /* Remove any left margin from the page */
+            @page {
+                margin: 15mm !important;
+            }
+            
+            /* Ensure content starts from the left edge */
+            .row {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            .col-12 {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
         }
     </style>
 </head>
