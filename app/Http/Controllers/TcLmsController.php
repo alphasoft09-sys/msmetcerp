@@ -267,6 +267,7 @@ class TcLmsController extends Controller
 
         // Debug: Log request data
         \Log::info('Request data received:');
+        \Log::info('Content-Type: ' . $request->header('Content-Type'));
         \Log::info('site_title: ' . ($request->site_title ?? 'NULL'));
         \Log::info('site_department: ' . ($request->site_department ?? 'NULL'));
         \Log::info('site_description: ' . ($request->site_description ?? 'NULL'));
@@ -274,16 +275,33 @@ class TcLmsController extends Controller
         \Log::info('is_ajax: ' . ($request->ajax() ? 'true' : 'false'));
         \Log::info('CSRF token: ' . ($request->header('X-CSRF-TOKEN') ?? 'NULL'));
         \Log::info('Request method: ' . $request->method());
+        \Log::info('Request JSON: ' . json_encode($request->json()->all()));
+        
+        // Check if we're receiving JSON
+        $isJson = strpos($request->header('Content-Type'), 'application/json') !== false;
+        
+        // Get data from the appropriate source
+        $data = $isJson ? $request->json()->all() : $request->all();
+        
+        \Log::info('Is JSON request: ' . ($isJson ? 'true' : 'false'));
+        \Log::info('Parsed data: ' . json_encode($data));
         
         // Only validate site_contents and status, get other values from database
-        $request->validate([
+        $validator = \Validator::make($data, [
             'site_contents' => 'nullable|string|max:16777215', // MEDIUMTEXT column limit (16MB)
             'status' => 'nullable|string|in:draft,submitted', // Allow status update
         ]);
+        
+        if ($validator->fails()) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()], 422);
+            }
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         try {
             // Clean old JSON data if present
-            $siteContents = $request->site_contents;
+            $siteContents = $isJson ? $data['site_contents'] : $request->site_contents;
             
             // Debug: Log what we're receiving
             \Log::info('Received content length: ' . strlen($siteContents));
@@ -322,7 +340,11 @@ class TcLmsController extends Controller
             ];
             
             // Update status if provided
-            if ($request->has('status')) {
+            if ($isJson) {
+                if (isset($data['status'])) {
+                    $updateData['status'] = $data['status'];
+                }
+            } else if ($request->has('status')) {
                 $updateData['status'] = $request->status;
             }
             
