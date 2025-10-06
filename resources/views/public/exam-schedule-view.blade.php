@@ -835,8 +835,12 @@
             display: none !important;
         }
         
-        /* Hide header and footer when printing */
-        .goi-header {
+        /* Hide Government header and navigation when printing */
+        .goi-header-unique {
+            display: none !important;
+        }
+        
+        .goi-navigation {
             display: none !important;
         }
         
@@ -868,6 +872,21 @@
             border-radius: 0 !important;
             box-shadow: none !important;
             background-color: white !important;
+        }
+        
+        /* Hide any other header elements */
+        header {
+            display: none !important;
+        }
+        
+        nav {
+            display: none !important;
+        }
+        
+        /* Ensure only the schedule content is visible */
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
         }
     }
 </style>

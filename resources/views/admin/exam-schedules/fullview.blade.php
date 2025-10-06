@@ -676,6 +676,34 @@
             #studentListLink {
                 display: none !important;
             }
+            
+            /* Hide Government header and navigation when printing */
+            .goi-header-unique {
+                display: none !important;
+            }
+            
+            .goi-navigation {
+                display: none !important;
+            }
+            
+            .goi-footer {
+                display: none !important;
+            }
+            
+            /* Hide any other header elements */
+            header {
+                display: none !important;
+            }
+            
+            nav {
+                display: none !important;
+            }
+            
+            /* Ensure only the schedule content is visible */
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
         }
     </style>
 </head>
