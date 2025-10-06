@@ -17,6 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    @include('layouts.goi-header')
     @include('layouts.goi-navigation')
     
     <!-- Mobile Toggle Button -->
