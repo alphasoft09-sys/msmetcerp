@@ -211,14 +211,26 @@ class TcLmsController extends Controller
      */
     public function update(Request $request, TcLms $tcLm)
     {
-        $user = Auth::user();
+        try {
+            $user = Auth::user();
         
-        // Debug: Log user information
-        \Log::info('Update request - User: ' . ($user ? $user->email : 'NULL') . ', Role: ' . ($user ? $user->user_role : 'NULL'));
-        \Log::info('LMS Site ID: ' . $tcLm->id . ', Faculty Code: ' . $tcLm->faculty_code);
+        // Debug: Log comprehensive request information
+        \Log::info('=== LMS UPDATE REQUEST DEBUG START ===');
+        \Log::info('Timestamp: ' . now());
+        \Log::info('User: ' . ($user ? $user->email : 'NULL'));
+        \Log::info('User Role: ' . ($user ? $user->user_role : 'NULL'));
+        \Log::info('User ID: ' . ($user ? $user->id : 'NULL'));
+        \Log::info('LMS Site ID: ' . $tcLm->id);
+        \Log::info('Faculty Code: ' . $tcLm->faculty_code);
         \Log::info('Request URL: ' . $request->fullUrl());
         \Log::info('Request Method: ' . $request->method());
         \Log::info('Is AJAX: ' . ($request->ajax() ? 'true' : 'false'));
+        \Log::info('Request Headers: ' . json_encode($request->headers->all()));
+        \Log::info('Request IP: ' . $request->ip());
+        \Log::info('User Agent: ' . $request->userAgent());
+        \Log::info('Session ID: ' . $request->session()->getId());
+        \Log::info('CSRF Token: ' . $request->header('X-CSRF-TOKEN'));
+        \Log::info('=== LMS UPDATE REQUEST DEBUG END ===');
         
         if ($user->user_role !== 5) {
             \Log::warning('User role mismatch - Expected: 5, Got: ' . $user->user_role);
@@ -344,6 +356,23 @@ class TcLmsController extends Controller
             return redirect()->route('admin.tc-lms.index')
                 ->with('success', 'LMS site updated successfully.');
                 
+        } catch (\Exception $e) {
+            // Handle any general exceptions
+            \Log::error('=== LMS UPDATE EXCEPTION DEBUG START ===');
+            \Log::error('Exception Type: ' . get_class($e));
+            \Log::error('Exception Message: ' . $e->getMessage());
+            \Log::error('Exception File: ' . $e->getFile() . ':' . $e->getLine());
+            \Log::error('Exception Trace: ' . $e->getTraceAsString());
+            \Log::error('Request URL: ' . $request->fullUrl());
+            \Log::error('Request Method: ' . $request->method());
+            \Log::error('User: ' . (Auth::user() ? Auth::user()->email : 'NULL'));
+            \Log::error('=== LMS UPDATE EXCEPTION DEBUG END ===');
+            
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => 'An error occurred: ' . $e->getMessage()], 500);
+            }
+            
+            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database-specific errors
             \Log::error('Database QueryException: ' . $e->getMessage());

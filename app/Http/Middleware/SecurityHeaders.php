@@ -15,6 +15,12 @@ class SecurityHeaders
      */
     public function handle(Request $request, Closure $next): Response
     {
+        \Log::info('=== SECURITY HEADERS MIDDLEWARE DEBUG START ===');
+        \Log::info('Request URL: ' . $request->fullUrl());
+        \Log::info('Request Method: ' . $request->method());
+        \Log::info('Is AJAX: ' . ($request->ajax() ? 'true' : 'false'));
+        \Log::info('=== SECURITY HEADERS MIDDLEWARE DEBUG END ===');
+        
         $response = $next($request);
 
         // Security Headers
