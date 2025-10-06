@@ -163,30 +163,7 @@
             :backLinkUrl="route('admin.login')"
             backLinkText="Back to Login"
         >
-            <!-- Password Recovery Steps -->
-            <div class="goi-steps-container">
-                <div class="goi-step">
-                    <div class="goi-step-number">1</div>
-                    <div class="goi-step-content">
-                        <div class="goi-step-title">Enter Your Email Address</div>
-                        <div class="goi-step-description">Provide the email address associated with your admin account.</div>
-                    </div>
-                </div>
-                <div class="goi-step">
-                    <div class="goi-step-number">2</div>
-                    <div class="goi-step-content">
-                        <div class="goi-step-title">Check Your Email</div>
-                        <div class="goi-step-description">We'll send a password reset link to your registered email address.</div>
-                    </div>
-                </div>
-                <div class="goi-step">
-                    <div class="goi-step-number">3</div>
-                    <div class="goi-step-content">
-                        <div class="goi-step-title">Reset Your Password</div>
-                        <div class="goi-step-description">Click the link in the email and create a new secure password.</div>
-                    </div>
-                </div>
-            </div>
+           
             
             <!-- Email Field -->
             <div class="goi-form-group-clean">
@@ -229,10 +206,35 @@
                     <i class="fas fa-spinner fa-spin"></i> Sending...
                 </span>
             </button>
+
+             <!-- Password Recovery Steps -->
+             <div class="goi-steps-container">
+                <div class="goi-step">
+                    <div class="goi-step-number">1</div>
+                    <div class="goi-step-content">
+                        <div class="goi-step-title">Enter Your Email Address</div>
+                        <div class="goi-step-description">Provide the email address associated with your admin account.</div>
+                    </div>
+                </div>
+                <div class="goi-step">
+                    <div class="goi-step-number">2</div>
+                    <div class="goi-step-content">
+                        <div class="goi-step-title">Check Your Email</div>
+                        <div class="goi-step-description">We'll send a password reset link to your registered email address.</div>
+                    </div>
+                </div>
+                <div class="goi-step">
+                    <div class="goi-step-number">3</div>
+                    <div class="goi-step-content">
+                        <div class="goi-step-title">Reset Your Password</div>
+                        <div class="goi-step-description">Click the link in the email and create a new secure password.</div>
+                    </div>
+                </div>
+            </div>
             
             <!-- Help Contact -->
             <div class="goi-help-contact">
-                <p>Need help? Contact <a href="mailto:admin.support@msme.gov.in">admin.support@msme.gov.in</a></p>
+                <p>Need help? Contact <a href="mailto:msmeexamcell@gmail.com">msmeexamcell@gmail.com</a></p>
             </div>
         </x-clean-form-layout>
     </main>

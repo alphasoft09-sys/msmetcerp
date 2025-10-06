@@ -206,7 +206,7 @@
                             id="email" 
                             name="email" 
                             class="goi-form-input-clean @error('email') error @enderror"
-                            placeholder="yourname@example.com"
+                            placeholder="msmeexamcell@gmail.com"
                             value="{{ old('email') }}"
                             required
                             autocomplete="email"

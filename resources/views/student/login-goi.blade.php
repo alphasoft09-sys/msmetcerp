@@ -245,7 +245,7 @@
                             id="email" 
                             name="email" 
                             class="goi-form-input-clean @error('email') error @enderror"
-                            placeholder="yourname@example.com or roll number"
+                            placeholder="msmeexamcell@gmail.com or roll number"
                             value="{{ old('email') }}"
                             required
                             autocomplete="username"

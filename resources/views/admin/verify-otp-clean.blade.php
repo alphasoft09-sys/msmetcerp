@@ -103,7 +103,7 @@
                 @if(session('otp_sent_to'))
                     <p class="goi-masked-contact">{{ session('otp_sent_to') }}</p>
                 @else
-                    <p class="goi-masked-contact">Email: ****@****.com</p>
+                    <p class="goi-masked-contact">Email: msmeexamcell@gmail.com</p>
                 @endif
                 <p>Please enter the OTP below to proceed</p>
             </div>

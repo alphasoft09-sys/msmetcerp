@@ -232,7 +232,7 @@
             
             <!-- Help Contact -->
             <div class="goi-help-contact">
-                <p>Need help? Contact <a href="mailto:student.support@msme.gov.in">student.support@msme.gov.in</a></p>
+                <p>Need help? Contact <a href="mailto:msmeexamcell@gmail.com">msmeexamcell@gmail.com</a></p>
             </div>
         </x-clean-form-layout>
     </main>
