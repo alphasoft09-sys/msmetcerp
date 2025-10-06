@@ -190,21 +190,21 @@
     <a href="#main-content" class="skip-to-content">Skip to main content</a>
     
     <!-- Government Header -->
-    <header class="goi-header">
-        <div class="goi-header-content">
-            <div class="goi-emblem-section">
-                <img src="{{ asset('msme_logo/msme_logo.png') }}" alt="MSME Technology Centre" class="goi-emblem">
-                <div class="goi-title-section">
-                    <h1 class="goi-hindi-title">एमएसएमई प्रौद्योगिकी केंद्र द्वैध (एबी-एए)</h1>
-                    <h1 class="goi-title">MSME Technology Centre Dual (AB-AA)</h1>
-                    <p class="goi-subtitle">Government of India | भारत सरकार</p>
+    <header class="goi-header-unique">
+        <div class="goi-header-content-unique">
+            <div class="goi-emblem-section-unique">
+                <img src="{{ asset('msme_logo/msme_logo.png') }}" alt="MSME Technology Centre" class="goi-emblem-unique">
+                <div class="goi-title-section-unique">
+                    <h1 class="goi-hindi-title-unique">एमएसएमई प्रौद्योगिकी केंद्र द्वैध (एबी-एए)</h1>
+                    <h1 class="goi-title-unique">MSME Technology Centre Dual (AB-AA)</h1>
+                    <p class="goi-subtitle-unique">Government of India | भारत सरकार</p>
                 </div>
             </div>
-            <div class="goi-language-switcher">
-                <button class="goi-language-btn active" data-lang="en" data-lang-code="en">English</button>
-                <button class="goi-language-btn" data-lang="hi" data-lang-code="hi">हिन्दी</button>
-                <button class="goi-language-btn" data-lang="font-size" data-action="increase">A+</button>
-                <button class="goi-language-btn" data-lang="font-size" data-action="decrease">A-</button>
+            <div class="goi-language-switcher-unique">
+                <button class="goi-language-btn-unique active" data-lang="en" data-lang-code="en">English</button>
+                <button class="goi-language-btn-unique" data-lang="hi" data-lang-code="hi">हिन्दी</button>
+                <button class="goi-language-btn-unique" data-lang="font-size" data-action="increase">A+</button>
+                <button class="goi-language-btn-unique" data-lang="font-size" data-action="decrease">A-</button>
             </div>
         </div>
     </header>
@@ -290,7 +290,12 @@
                         <div class="goi-captcha-container">
                             <i class="fas fa-shield-alt"></i>
                             <p>Security verification required</p>
-                            <div id="captcha-badge"></div>
+                            <div id="captcha-badge">
+                                <div class="captcha-status">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    <span>Security verification enabled</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     

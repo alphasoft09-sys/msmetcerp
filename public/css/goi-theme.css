@@ -251,6 +251,23 @@ body {
     color: var(--gray-600);
 }
 
+.captcha-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: var(--gray-50);
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: var(--success);
+}
+
+.captcha-status i {
+    font-size: 1rem;
+}
+
 .goi-btn-clean {
     width: 100%;
     background: var(--primary-red);
