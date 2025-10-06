@@ -448,9 +448,18 @@ window.addEventListener('load', function() {
                 formData.append('_method', 'PUT');
                 
                 // Ensure all required fields are included
-                formData.append('site_title', document.querySelector('input[name="site_title"]').value);
-                formData.append('site_department', document.querySelector('input[name="site_department"]').value);
-                formData.append('site_description', document.querySelector('input[name="site_description"]').value);
+                const siteTitle = document.querySelector('input[name="site_title"]');
+                const siteDepartment = document.querySelector('input[name="site_department"]');
+                const siteDescription = document.querySelector('input[name="site_description"]');
+                
+                console.log('Form field values:');
+                console.log('site_title:', siteTitle ? siteTitle.value : 'NOT FOUND');
+                console.log('site_department:', siteDepartment ? siteDepartment.value : 'NOT FOUND');
+                console.log('site_description:', siteDescription ? siteDescription.value : 'NOT FOUND');
+                
+                if (siteTitle) formData.append('site_title', siteTitle.value);
+                if (siteDepartment) formData.append('site_department', siteDepartment.value);
+                if (siteDescription) formData.append('site_description', siteDescription.value);
                 
                 // Debug: Log request details
                 console.log('Sending AJAX request with headers:');
