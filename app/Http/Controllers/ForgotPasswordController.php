@@ -180,7 +180,7 @@ class ForgotPasswordController extends Controller
             return redirect()->route('admin.login')->with('error', 'Invalid or expired reset link.');
         }
 
-        return view('admin.reset-password', compact('token'));
+        return view('admin.reset-password-clean', compact('token'));
     }
 
     /**
@@ -204,7 +204,7 @@ class ForgotPasswordController extends Controller
             return redirect()->route('student.login')->with('error', 'Invalid or expired reset link.');
         }
 
-        return view('student.reset-password', compact('token'));
+        return view('student.reset-password-clean', compact('token'));
     }
 
     /**
@@ -227,18 +227,26 @@ class ForgotPasswordController extends Controller
                 ->first();
 
             if (!$resetToken) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid or expired reset link.'
-                ], 400);
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Invalid or expired reset link.'
+                    ], 400);
+                }
+                
+                return back()->with('error', 'Invalid or expired reset link.');
             }
 
             $user = User::where('email', $request->email)->first();
             if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not found.'
-                ], 404);
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'User not found.'
+                    ], 404);
+                }
+                
+                return back()->with('error', 'User not found.');
             }
 
             // Update password
@@ -251,19 +259,27 @@ class ForgotPasswordController extends Controller
                 ->where('token', $request->token)
                 ->delete();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Password has been reset successfully. You can now login with your new password.',
-                'redirect_url' => route('admin.login')
-            ]);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Password has been reset successfully. You can now login with your new password.',
+                    'redirect_url' => route('admin.login')
+                ]);
+            }
+
+            return redirect()->route('admin.login')->with('success', 'Password has been reset successfully. You can now login with your new password.');
 
         } catch (\Exception $e) {
             \Log::error('Admin password reset error: ' . $e->getMessage());
             
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to reset password. Please try again.'
-            ], 500);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to reset password. Please try again.'
+                ], 500);
+            }
+            
+            return back()->with('error', 'Failed to reset password. Please try again.');
         }
     }
 
@@ -287,18 +303,26 @@ class ForgotPasswordController extends Controller
                 ->first();
 
             if (!$resetToken) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid or expired reset link.'
-                ], 400);
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Invalid or expired reset link.'
+                    ], 400);
+                }
+                
+                return back()->with('error', 'Invalid or expired reset link.');
             }
 
             $student = StudentLogin::where('email', $request->email)->first();
             if (!$student) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Student not found.'
-                ], 404);
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Student not found.'
+                    ], 404);
+                }
+                
+                return back()->with('error', 'Student not found.');
             }
 
             // Update password
@@ -311,19 +335,27 @@ class ForgotPasswordController extends Controller
                 ->where('token', $request->token)
                 ->delete();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Password has been reset successfully. You can now login with your new password.',
-                'redirect_url' => route('student.login')
-            ]);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Password has been reset successfully. You can now login with your new password.',
+                    'redirect_url' => route('student.login')
+                ]);
+            }
+
+            return redirect()->route('student.login')->with('success', 'Password has been reset successfully. You can now login with your new password.');
 
         } catch (\Exception $e) {
             \Log::error('Student password reset error: ' . $e->getMessage());
             
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to reset password. Please try again.'
-            ], 500);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to reset password. Please try again.'
+                ], 500);
+            }
+            
+            return back()->with('error', 'Failed to reset password. Please try again.');
         }
     }
 } 
