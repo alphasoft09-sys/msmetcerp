@@ -453,6 +453,19 @@ window.addEventListener('load', function() {
                     console.log(key + ':', value);
                 }
                 
+                // Debug: Check if hidden inputs exist
+                console.log('Hidden input elements:');
+                console.log('site_title input:', document.querySelector('input[name="site_title"]'));
+                console.log('site_department input:', document.querySelector('input[name="site_department"]'));
+                console.log('site_description input:', document.querySelector('input[name="site_description"]'));
+                
+                // Debug: Check form element
+                console.log('Form element:', form);
+                console.log('Form elements count:', form.elements.length);
+                for (let i = 0; i < form.elements.length; i++) {
+                    console.log('Form element ' + i + ':', form.elements[i].name, '=', form.elements[i].value);
+                }
+                
                 // Debug: Log request details
                 console.log('Sending AJAX request with headers:');
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
