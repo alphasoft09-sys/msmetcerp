@@ -217,7 +217,7 @@ Route::get('/session-health', function() {
 
     // Admin forgot password routes
     Route::get('/forgot-password', function() {
-        return view('admin.forgot-password-goi');
+        return view('admin.forgot-password-clean');
     })->name('admin.password.request');
     Route::post('/forgot-password', [ForgotPasswordController::class, 'sendAdminResetLink'])->name('admin.password.email')->middleware('captcha');
     Route::get('/reset-password', [ForgotPasswordController::class, 'showAdminResetForm'])->name('admin.password.reset');
@@ -573,7 +573,7 @@ Route::prefix('student')->group(function () {
 
     // Student forgot password routes
     Route::get('/forgot-password', function() {
-        return view('student.forgot-password-goi');
+        return view('student.forgot-password-clean');
     })->name('student.password.request');
     Route::post('/forgot-password', [ForgotPasswordController::class, 'sendStudentResetLink'])->name('student.password.email')->middleware('captcha');
     Route::get('/reset-password', [ForgotPasswordController::class, 'showStudentResetForm'])->name('student.password.reset');
