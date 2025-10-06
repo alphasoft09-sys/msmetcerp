@@ -11,6 +11,11 @@
         .lms-content {
             line-height: 1.8;
             font-size: 16px;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
         }
         
         .lms-content h1, .lms-content h2, .lms-content h3, 
@@ -177,6 +182,21 @@
                 overflow-y: visible;
             }
         }
+        
+        /* Ensure main content area has proper background */
+        #main-content {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+        
+        /* Content wrapper styling */
+        .content-wrapper {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
     </style>
 @endpush
 
@@ -222,23 +242,24 @@
     <!-- Main Content -->
     <main id="main-content">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <article class="lms-content">
-                        @if($lmsSite->site_contents && !empty(trim($lmsSite->site_contents)))
-                            {!! $lmsSite->site_contents !!}
-                        @else
-                            <div class="text-center py-5">
-                                <i class="fas fa-file-text display-1 text-muted"></i>
-                                <h3 class="mt-3 text-muted">Content Coming Soon</h3>
-                                <p class="text-muted">This educational content is being prepared and will be available soon.</p>
-                            </div>
-                        @endif
-                    </article>
-                </div>
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <article class="lms-content">
+                            @if($lmsSite->site_contents && !empty(trim($lmsSite->site_contents)))
+                                {!! $lmsSite->site_contents !!}
+                            @else
+                                <div class="text-center py-5">
+                                    <i class="fas fa-file-text display-1 text-muted"></i>
+                                    <h3 class="mt-3 text-muted">Content Coming Soon</h3>
+                                    <p class="text-muted">This educational content is being prepared and will be available soon.</p>
+                                </div>
+                            @endif
+                        </article>
+                    </div>
                 
                 <div class="col-lg-4">
-                    <div class="sidebar-sticky">
+                    <div class="sidebar-sticky p-3">
                         <!-- SEO Meta Information -->
                     <div class="seo-meta">
                         <h6 class="fw-bold mb-3">
@@ -324,8 +345,9 @@
                     </div>
                     </div> <!-- End sidebar-sticky -->
                 </div>
-            </div>
-        </div>
+                </div> <!-- End row -->
+            </div> <!-- End content-wrapper -->
+        </div> <!-- End container -->
     </main>
 @endsection
 
