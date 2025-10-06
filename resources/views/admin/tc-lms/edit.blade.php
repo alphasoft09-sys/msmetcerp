@@ -506,6 +506,14 @@ window.addEventListener('load', function() {
                     setTimeout(() => reject(new Error('Request timeout')), 30000); // 30 seconds timeout
                 });
                 
+                // Convert FormData to JSON object
+                const jsonData = {};
+                for (let [key, value] of formData.entries()) {
+                    jsonData[key] = value;
+                }
+                
+                console.log('Sending as JSON:', jsonData);
+                
                 // Race between fetch and timeout
                 Promise.race([
                       fetch(form.action, {
@@ -513,9 +521,10 @@ window.addEventListener('load', function() {
                           headers: {
                               'X-CSRF-TOKEN': csrfToken,
                               'X-Requested-With': 'XMLHttpRequest',
-                              'Accept': 'application/json'
+                              'Accept': 'application/json',
+                              'Content-Type': 'application/json'
                           },
-                          body: formData
+                          body: JSON.stringify(jsonData)
                       }),
                     timeoutPromise
                 ])
