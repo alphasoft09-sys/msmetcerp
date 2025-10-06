@@ -214,10 +214,11 @@
         /* Sticky Sidebar */
         .sidebar-sticky {
             position: sticky;
-            top: 2rem;
-            max-height: calc(100vh - 4rem);
+            top: 20px; /* Reduced top spacing for better visibility */
+            max-height: calc(100vh - 40px); /* Increased height for better visibility */
             overflow-y: auto;
             z-index: 10;
+            align-self: flex-start; /* Ensure it aligns to the top */
         }
         
         .sidebar-sticky::-webkit-scrollbar {
@@ -236,6 +237,12 @@
         
         .sidebar-sticky::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
+        }
+        
+        /* Make parent column sticky-friendly */
+        .sticky-column {
+            position: relative;
+            min-height: 100%;
         }
         
         /* Mobile responsive for sticky sidebar */
@@ -263,6 +270,19 @@
             margin-top: 0;
             width: 100%;
             max-width: 100%;
+        }
+        
+        /* Fix for row containing sticky sidebar */
+        .content-wrapper .row {
+            display: flex;
+            flex-wrap: wrap;
+            min-height: 100vh; /* Ensure row is tall enough */
+        }
+        
+        /* Ensure main content column has proper height */
+        .content-wrapper .col-lg-8 {
+            display: flex;
+            flex-direction: column;
         }
     </style>
 @endpush
@@ -327,7 +347,7 @@
                         </article>
                     </div>
                 
-                <div class="col-lg-4">
+                <div class="col-lg-4 sticky-column">
                     <div class="sidebar-sticky p-3">
                         <!-- SEO Meta Information -->
                     <div class="seo-meta">
@@ -424,8 +444,47 @@
 <!-- QR Code generation using QuickChart.io API -->
 
 <script>
-    // Handle content overflow issues dynamically
+    // Handle sticky sidebar
     document.addEventListener('DOMContentLoaded', function() {
+        // Set up sticky sidebar
+        const sidebar = document.querySelector('.sidebar-sticky');
+        const stickyColumn = document.querySelector('.sticky-column');
+        const mainContent = document.querySelector('.lms-content');
+        
+        if (sidebar && mainContent && stickyColumn) {
+            // Set initial height for the sticky column
+            function updateStickyHeight() {
+                const mainContentHeight = mainContent.offsetHeight;
+                const windowHeight = window.innerHeight;
+                const sidebarHeight = sidebar.offsetHeight;
+                
+                // Ensure the sticky column is at least as tall as the main content
+                if (mainContentHeight > windowHeight) {
+                    stickyColumn.style.minHeight = mainContentHeight + 'px';
+                }
+                
+                // Adjust sidebar max-height based on viewport
+                sidebar.style.maxHeight = (windowHeight - 40) + 'px';
+            }
+            
+            // Update on load and resize
+            updateStickyHeight();
+            window.addEventListener('resize', updateStickyHeight);
+            
+            // Update on scroll to ensure it stays sticky
+            window.addEventListener('scroll', function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const headerHeight = document.querySelector('.content-header')?.offsetHeight || 0;
+                
+                // Adjust top position based on scroll
+                if (scrollTop > headerHeight) {
+                    sidebar.style.top = '20px';
+                } else {
+                    sidebar.style.top = (headerHeight - scrollTop + 20) + 'px';
+                }
+            });
+        }
+    
         // Fix any overflowing elements
         const contentContainer = document.querySelector('.content-container');
         if (contentContainer) {
