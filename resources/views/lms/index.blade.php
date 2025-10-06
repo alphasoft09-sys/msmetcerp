@@ -1909,7 +1909,7 @@
                     <form id="filterForm">
                         <!-- Search Box -->
                         <div class="filter-section">
-                            <h6><i class="fas fa-search me-2"></i>Search</h6>
+                            <!-- <h6><i class="fas fa-search me-2"></i>Search</h6> -->
                             <div class="search-input-group">
                                 <input type="text" 
                                        class="form-control" 

@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-12">
                 <!-- Navigation -->
-                <div class="goi-navigation mb-4">
+                <!-- <div class="goi-navigation mb-4">
                     <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
                         <div class="container-fluid">
                             <a class="navbar-brand" href="{{ route('home') }}">
@@ -46,7 +46,7 @@
                             </div>
                         </div>
                     </nav>
-                </div>
+                </div> -->
 
                 <!-- <div class="goi-page-header">
                     <h1 class="goi-page-title">Exam Schedules</h1>
