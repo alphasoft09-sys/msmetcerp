@@ -17,8 +17,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    @include('layouts.goi-header')
-    @include('layouts.goi-navigation')
     
     <!-- Mobile Toggle Button -->
     <button class="mobile-toggle" type="button" id="sidebarToggle" style="position: fixed; top: 1rem; left: 1rem; z-index: 1040; background: white; border: 1px solid #ddd; border-radius: 4px; padding: 0.75rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: none; color: #333; cursor: pointer; min-width: 44px; min-height: 44px; align-items: center; justify-content: center;">
