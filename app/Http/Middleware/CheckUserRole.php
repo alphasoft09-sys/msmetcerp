@@ -28,7 +28,7 @@ class CheckUserRole
 
         // Check if user has any of the required roles
         if (!in_array($userRole, $roles)) {
-            \Log::warning('Unauthorized access attempt by user: ' . $user->email . ' with role: ' . $userRole);
+            \Log::warning('Unauthorized access attempt by user: ' . $user->email . ' with role: ' . $userRole . ' for required roles: ' . implode(',', $roles));
             abort(403, 'Unauthorized access');
         }
 

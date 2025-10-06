@@ -216,6 +216,9 @@ class TcLmsController extends Controller
         // Debug: Log user information
         \Log::info('Update request - User: ' . ($user ? $user->email : 'NULL') . ', Role: ' . ($user ? $user->user_role : 'NULL'));
         \Log::info('LMS Site ID: ' . $tcLm->id . ', Faculty Code: ' . $tcLm->faculty_code);
+        \Log::info('Request URL: ' . $request->fullUrl());
+        \Log::info('Request Method: ' . $request->method());
+        \Log::info('Is AJAX: ' . ($request->ajax() ? 'true' : 'false'));
         
         if ($user->user_role !== 5) {
             \Log::warning('User role mismatch - Expected: 5, Got: ' . $user->user_role);

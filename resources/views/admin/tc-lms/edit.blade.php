@@ -468,7 +468,7 @@ window.addEventListener('load', function() {
                 // Race between fetch and timeout
                 Promise.race([
                       fetch(form.action, {
-                          method: 'POST',
+                          method: 'PUT',
                           headers: {
                               'X-CSRF-TOKEN': csrfToken,
                               'X-Requested-With': 'XMLHttpRequest',
