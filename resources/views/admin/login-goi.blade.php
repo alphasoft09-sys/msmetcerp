@@ -179,134 +179,87 @@
     
     <!-- Main Content -->
     <main id="main-content" class="page-transition">
-        <div class="goi-login-container" style="flex: 1 0 auto;">
-            <!-- Left Side - Login Form -->
-            <div class="goi-login-left">
-                <div>
-                    <!-- Login Header -->
-                    <div class="goi-login-header">
-                        <h2><i class="fas fa-user-shield"></i> <span data-translate="Create an account">Create an account</span></h2>
-                        <p data-translate="Sign in and get started">Sign in and get started</p>
-                    </div>
-
-                    <!-- Navigation Links -->
-                    <div class="navigation-links mb-4">
-                        <p class="text-center text-muted mb-2">Quick Access:</p>
-                        <div class="d-flex justify-content-center gap-2 flex-wrap">
-                            <a href="{{ route('home') }}" class="btn btn-outline-primary">
-                                <i class="fas fa-home me-1"></i>Home
-                            </a>
-                            <a href="{{ route('public.lms.index') }}" class="btn btn-outline-info">
-                                <i class="fas fa-book me-1"></i>LMS
-                            </a>
-                            <a href="{{ route('public.exam-schedules') }}" class="btn btn-outline-success">
-                                <i class="fas fa-calendar-alt me-1"></i>Exam Schedules
-                            </a>
-                            <a href="{{ route('student.login') }}" class="btn btn-outline-warning">
-                                <i class="fas fa-graduation-cap me-1"></i>Student Login
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Alert Messages -->
-                    @include('partials.notification')
+        <div class="goi-login-container-clean">
+            <!-- Login Form Card -->
+            <div class="goi-login-card">
+                <!-- Login Header -->
+                <div class="goi-login-header-clean">
+                    <h2><i class="fas fa-user-shield"></i> Admin Login</h2>
+                    <p>Sign in to access admin dashboard</p>
                 </div>
+                
+                <!-- Alert Messages -->
+                @include('partials.notification')
                 
                 <!-- Login Form -->
                 <form id="loginForm" action="{{ route('admin.login') }}" method="POST">
                     @csrf
                     
                     <!-- Email Field -->
-                    <div class="goi-form-group">
-                        <label for="email" class="goi-form-label">
-                            <span data-translate="Email Address">Email Address</span>
-                        </label>
+                    <div class="goi-form-group-clean">
+                        <label for="email" class="goi-form-label-clean">Email Address</label>
                         <input 
                             type="email" 
                             id="email" 
                             name="email" 
-                            class="goi-form-input @error('email') error @enderror"
+                            class="goi-form-input-clean @error('email') error @enderror"
                             placeholder="yourname@example.com"
-                            data-translate-placeholder="yourname@example.com"
                             value="{{ old('email') }}"
                             required
                             autocomplete="email"
-                            aria-label="Email Address"
-                            aria-required="true"
                         >
-                        <span id="emailError" class="error-text" style="color: var(--error); font-size: 0.875rem; display: none;"></span>
                         @error('email')
-                            <span class="error-text" style="color: var(--error); font-size: 0.875rem;">{{ $message }}</span>
+                            <span class="error-text-clean">{{ $message }}</span>
                         @enderror
                     </div>
                     
                     <!-- Password Field -->
-                    <div class="goi-form-group">
-                        <label for="password" class="goi-form-label">
-                            <span data-translate="Password">Password</span>
-                        </label>
+                    <div class="goi-form-group-clean">
+                        <label for="password" class="goi-form-label-clean">Password</label>
                         <input 
                             type="password" 
                             id="password" 
                             name="password" 
-                            class="goi-form-input @error('password') error @enderror"
+                            class="goi-form-input-clean @error('password') error @enderror"
                             placeholder="••••••••"
                             required
                             autocomplete="current-password"
-                            aria-label="Password"
-                            aria-required="true"
                         >
-                        <span id="passwordError" class="error-text" style="color: var(--error); font-size: 0.875rem; display: none;"></span>
                         @error('password')
-                            <span class="error-text" style="color: var(--error); font-size: 0.875rem;">{{ $message }}</span>
+                            <span class="error-text-clean">{{ $message }}</span>
                         @enderror
                     </div>
                     
                     <!-- Remember Me & Forgot Password -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <div class="goi-form-options">
+                        <label class="goi-checkbox-label">
                             <input type="checkbox" name="remember" id="remember">
-                            <span style="font-size: 0.875rem;" data-translate="Remember me">Remember me</span>
+                            <span>Remember me</span>
                         </label>
-                        <a href="{{ route('admin.password.request') }}" style="font-size: 0.875rem; color: var(--primary-red); text-decoration: none;">
-                            <span data-translate="Forgot Password?">Forgot Password?</span>
-                        </a>
+                        <a href="{{ route('admin.password.request') }}" class="goi-forgot-link">Forgot Password?</a>
                     </div>
                     
-                                         <!-- CAPTCHA Section -->
-                     <div class="goi-form-group" style="margin-bottom: 1.5rem;">
-                         <div class="captcha-container" style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
-                             <i class="fas fa-shield-alt" style="color: var(--primary-red); font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
-                             <p style="margin: 0; font-size: 0.875rem; color: var(--gray-600);" data-translate="Security verification required">Security verification required</p>
-                             <div id="captcha-badge" style="margin-top: 0.5rem;"></div>
-                         </div>
-                     </div>
-                     
-                     <!-- Submit Button -->
-                     <button type="submit" id="submitBtn" class="goi-btn goi-btn-primary goi-btn-block">
-                         <span id="submitText" data-translate="Submit">Submit</span>
-                         <span id="submitLoader" style="display: none;">
-                                                          <i class="fas fa-spinner fa-spin"></i> <span data-translate="Signing In...">Signing In...</span>
-                         </span>
-                     </button>
+                    <!-- CAPTCHA Section -->
+                    <div class="goi-captcha-section">
+                        <div class="goi-captcha-container">
+                            <i class="fas fa-shield-alt"></i>
+                            <p>Security verification required</p>
+                            <div id="captcha-badge"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" id="submitBtn" class="goi-btn-clean">
+                        <span id="submitText">Sign In</span>
+                        <span id="submitLoader" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i> Signing In...
+                        </span>
+                    </button>
                 </form>
                 
                 <!-- Footer Links -->
-                <div style="margin-top: 1.5rem; text-align: center;">
-                    <p style="font-size: 0.75rem; color: var(--gray-600);">
-                                                 <span data-translate="By signing in, you agree to our">By signing in, you agree to our</span> <a href="#" style="color: var(--primary-red);" data-translate="Terms & Conditions">Terms & Conditions</a> <span data-translate="and">and</span> <a href="#" style="color: var(--primary-red);" data-translate="Privacy Policy">Privacy Policy</a>
-                    </p>
-                </div>
-            </div>
-            
-            <!-- Right Side - Image and Info -->
-            <div class="goi-login-right">
-                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop&crop=center" alt="MSME Team Collaboration">
-                
-                <!-- Chat Bubble -->
-                <div class="chat-bubble">
-                                         <strong data-translate="Welcome!">Welcome!</strong>
-                     <p style="margin-top: 0.25rem;" data-translate="Sign in to access MSME admin tools and resources.">Sign in to access MSME admin tools and resources.</p>
+                <div class="goi-login-footer">
+                    <p>By signing in, you agree to our <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></p>
                 </div>
             </div>
         </div>

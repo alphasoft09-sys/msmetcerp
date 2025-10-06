@@ -117,7 +117,228 @@ body {
     font-weight: 600;
 }
 
-/* Login Container */
+/* Clean Login Container */
+.goi-login-container-clean {
+    max-width: 450px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.goi-login-card {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    border: 1px solid var(--gray-200);
+}
+
+.goi-login-header-clean {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.goi-login-header-clean h2 {
+    color: var(--primary-red);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.goi-login-header-clean p {
+    color: var(--gray-600);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Clean Form Elements */
+.goi-form-group-clean {
+    margin-bottom: 1.5rem;
+}
+
+.goi-form-label-clean {
+    display: block;
+    color: var(--gray-700);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.goi-form-input-clean {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--gray-300);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: var(--white);
+}
+
+.goi-form-input-clean:focus {
+    outline: none;
+    border-color: var(--primary-red);
+    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
+}
+
+.goi-form-input-clean.error {
+    border-color: var(--error);
+}
+
+.error-text-clean {
+    color: var(--error);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.goi-form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.goi-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--gray-700);
+}
+
+.goi-checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary-red);
+}
+
+.goi-forgot-link {
+    color: var(--primary-red);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.goi-forgot-link:hover {
+    text-decoration: underline;
+}
+
+.goi-captcha-section {
+    margin-bottom: 1.5rem;
+}
+
+.goi-captcha-container {
+    text-align: center;
+    padding: 1rem;
+    background: var(--gray-50);
+    border-radius: 8px;
+    border: 1px solid var(--gray-200);
+}
+
+.goi-captcha-container i {
+    color: var(--primary-red);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.goi-captcha-container p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+.goi-btn-clean {
+    width: 100%;
+    background: var(--primary-red);
+    color: var(--white);
+    border: none;
+    padding: 0.875rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.goi-btn-clean:hover {
+    background: var(--dark-red);
+    transform: translateY(-1px);
+}
+
+.goi-btn-clean:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.goi-login-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-200);
+}
+
+.goi-login-footer p {
+    font-size: 0.8rem;
+    color: var(--gray-600);
+    margin: 0;
+}
+
+.goi-login-footer a {
+    color: var(--primary-red);
+    text-decoration: none;
+}
+
+.goi-login-footer a:hover {
+    text-decoration: underline;
+}
+
+.goi-new-student {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.goi-new-student p {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    margin: 0;
+}
+
+.goi-new-student a {
+    color: var(--primary-red);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.goi-new-student a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design for Clean Login */
+@media (max-width: 768px) {
+    .goi-login-container-clean {
+        margin: 1rem auto;
+        padding: 0 0.5rem;
+    }
+    
+    .goi-login-card {
+        padding: 1.5rem;
+    }
+    
+    .goi-login-header-clean h2 {
+        font-size: 1.25rem;
+    }
+}
+
+/* Old Login Container - Keep for backward compatibility */
 .goi-login-container {
     max-width: 1100px;
     margin: 1.5rem auto;
