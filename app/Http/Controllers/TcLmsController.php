@@ -352,6 +352,7 @@ class TcLmsController extends Controller
             $maxRetries = 3;
             $retryCount = 0;
             
+            
             while ($retryCount < $maxRetries) {
                 try {
                     $tcLm->update($updateData);

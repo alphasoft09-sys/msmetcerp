@@ -215,12 +215,13 @@
         .sidebar-sticky {
             position: sticky;
             top: 20px; /* Reduced top spacing for better visibility */
-            max-height: calc(100vh - 40px); /* Increased height for better visibility */
-            overflow-y: auto;
+            max-height: calc(100vh - 40px); /* Allow full viewport height minus padding */
+            overflow-y: auto; /* Enable scrolling for long content */
             z-index: 10;
             align-self: flex-start; /* Ensure it aligns to the top */
         }
         
+        /* Custom scrollbar for sidebar */
         .sidebar-sticky::-webkit-scrollbar {
             width: 6px;
         }
@@ -239,11 +240,18 @@
             background: #94a3b8;
         }
         
-        /* Make parent column sticky-friendly */
-        .sticky-column {
+        /* Ensure the main content area doesn't interfere with sticky positioning */
+        #main-content {
             position: relative;
-            min-height: 100%;
         }
+        
+        /* Add spacing between columns */
+        .row.g-4 > * {
+            padding-right: calc(var(--bs-gutter-x) * 0.5);
+            padding-left: calc(var(--bs-gutter-x) * 0.5);
+        }
+        
+        
         
         /* Mobile responsive for sticky sidebar */
         @media (max-width: 991px) {
@@ -251,6 +259,14 @@
                 position: static;
                 max-height: none;
                 overflow-y: visible;
+            }
+            
+            .content-wrapper {
+                margin-right: 0 !important;
+            }
+            
+            .sidebar-sticky {
+                margin-left: 0 !important;
             }
         }
         
@@ -328,10 +344,10 @@
 
     <!-- Main Content -->
     <main id="main-content">
-        <div class="container py-4">
-            <div class="content-wrapper">
-                <div class="row">
-                    <div class="col-lg-8">
+        <div class="container-fluid py-4">
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="content-wrapper me-3">
                         <article class="lms-content">
                             <div class="content-container">
                                 @if($lmsSite->site_contents && !empty(trim($lmsSite->site_contents)))
@@ -346,97 +362,96 @@
                             </div>
                         </article>
                     </div>
+                </div>
                 
-                <div class="col-lg-4 sticky-column">
-                    <div class="sidebar-sticky p-3">
+                <div class="col-lg-4">
+                    <div class="sidebar-sticky p-3 ms-2">
                         <!-- SEO Meta Information -->
-                    <div class="seo-meta">
-                        <h6 class="fw-bold mb-3">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Course Information
-                        </h6>
-                        <div class="mb-2">
-                            <strong>Department:</strong> {{ $lmsSite->site_department }}
-                        </div>
-                        <div class="mb-2">
-                            <strong>Instructor:</strong> {{ $lmsSite->faculty->name }}
-                        </div>
-                        <div class="mb-2">
-                            <strong>Created:</strong> {{ $lmsSite->created_at->format('F d, Y') }}
-                        </div>
-                        <div class="mb-2">
-                            <strong>Last Updated:</strong> {{ $lmsSite->updated_at->format('F d, Y') }}
-                        </div>
-                        @if($lmsSite->seo_keywords)
-                            <div class="mt-3">
-                                <strong>Keywords:</strong>
-                                <div class="mt-1">
-                                    @foreach(explode(',', $lmsSite->seo_keywords) as $keyword)
-                                        <span class="badge bg-secondary me-1 mb-1">{{ trim($keyword) }}</span>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-
-                    <!-- Related Content -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="card-title mb-0">
-                                <i class="fas fa-list me-2"></i>
-                                Related Content
+                        <div class="seo-meta">
+                            <h6 class="fw-bold mb-3">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Course Information
                             </h6>
-                        </div>
-                        <div class="card-body">
-                            <p class="text-muted">More educational content from {{ $lmsSite->site_department }} department will be available soon.</p>
-                            <a href="{{ route('public.lms.department', Str::slug($lmsSite->site_department)) }}" class="btn btn-outline-danger btn-sm">
-                                <i class="fas fa-arrow-left me-1"></i>
-                                View All {{ $lmsSite->site_department }} Content
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Share & QR Code -->
-                    <div class="card mt-3">
-                        <div class="card-header">
-                            <h6 class="card-title mb-0">
-                                <i class="fas fa-share-alt me-2"></i>
-                                Share This Content
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <!-- Copy Link Section -->
-                            <div class="mb-3">
-                                <label class="form-label small fw-bold">Share Link:</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control form-control-sm" id="shareUrl" value="{{ url()->current() }}" readonly>
-                                    <button class="btn btn-outline-primary btn-sm" type="button" id="copyLinkBtn">
-                                        <i class="fas fa-copy me-1"></i>Copy
-                                    </button>
-                                </div>
-                                <div class="form-text">Click copy to share this page with others</div>
+                            <div class="mb-2">
+                                <strong>Department:</strong> {{ $lmsSite->site_department }}
                             </div>
-
-                            <!-- QR Code Section -->
-                            <div class="text-center">
-                                <label class="form-label small fw-bold">QR Code:</label>
-                                <div class="qr-code-container">
-                                    <div class="qr-code-display">
-                                        <img src="https://quickchart.io/qr?text={{ urlencode(request()->url()) }}&size=200&format=png&margin=1" 
-                                             alt="QR Code for {{ $lmsSite->site_title }}" 
-                                             class="qr-code-image"
-                                             style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: 4px; display: block;">
+                            <div class="mb-2">
+                                <strong>Instructor:</strong> {{ $lmsSite->faculty->name }}
+                            </div>
+                            <div class="mb-2">
+                                <strong>Created:</strong> {{ $lmsSite->created_at->format('F d, Y') }}
+                            </div>
+                            <div class="mb-2">
+                                <strong>Last Updated:</strong> {{ $lmsSite->updated_at->format('F d, Y') }}
+                            </div>
+                            @if($lmsSite->seo_keywords)
+                                <div class="mt-3">
+                                    <strong>Keywords:</strong>
+                                    <div class="mt-1">
+                                        @foreach(explode(',', $lmsSite->seo_keywords) as $keyword)
+                                            <span class="badge bg-secondary me-1 mb-1">{{ trim($keyword) }}</span>
+                                        @endforeach
                                     </div>
                                 </div>
-                                
+                            @endif
+                        </div>
+
+                        <!-- Related Content -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="card-title mb-0">
+                                    <i class="fas fa-list me-2"></i>
+                                    Related Content
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted">More educational content from {{ $lmsSite->site_department }} department will be available soon.</p>
+                                <a href="{{ route('public.lms.department', Str::slug($lmsSite->site_department)) }}" class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-arrow-left me-1"></i>
+                                    View All {{ $lmsSite->site_department }} Content
+                                </a>
                             </div>
                         </div>
-                    </div>
+
+                        <!-- Share & QR Code -->
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <h6 class="card-title mb-0">
+                                    <i class="fas fa-share-alt me-2"></i>
+                                    Share This Content
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <!-- Copy Link Section -->
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Share Link:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control form-control-sm" id="shareUrl" value="{{ url()->current() }}" readonly>
+                                        <button class="btn btn-outline-primary btn-sm" type="button" id="copyLinkBtn">
+                                            <i class="fas fa-copy me-1"></i>Copy
+                                        </button>
+                                    </div>
+                                    <div class="form-text">Click copy to share this page with others</div>
+                                </div>
+
+                                <!-- QR Code Section -->
+                                <div class="text-center">
+                                    <label class="form-label small fw-bold">QR Code:</label>
+                                    <div class="qr-code-container">
+                                        <div class="qr-code-display">
+                                            <img src="https://quickchart.io/qr?text={{ urlencode(request()->url()) }}&size=200&format=png&margin=1" 
+                                                 alt="QR Code for {{ $lmsSite->site_title }}" 
+                                                 class="qr-code-image"
+                                                 style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: 4px; display: block;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div> <!-- End sidebar-sticky -->
                 </div>
-                </div> <!-- End row -->
-            </div> <!-- End content-wrapper -->
-        </div> <!-- End container -->
+            </div> <!-- End row -->
+        </div> <!-- End container-fluid -->
     </main>
 @endsection
 
@@ -448,41 +463,11 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Set up sticky sidebar
         const sidebar = document.querySelector('.sidebar-sticky');
-        const stickyColumn = document.querySelector('.sticky-column');
         const mainContent = document.querySelector('.lms-content');
         
-        if (sidebar && mainContent && stickyColumn) {
-            // Set initial height for the sticky column
-            function updateStickyHeight() {
-                const mainContentHeight = mainContent.offsetHeight;
-                const windowHeight = window.innerHeight;
-                const sidebarHeight = sidebar.offsetHeight;
-                
-                // Ensure the sticky column is at least as tall as the main content
-                if (mainContentHeight > windowHeight) {
-                    stickyColumn.style.minHeight = mainContentHeight + 'px';
-                }
-                
-                // Adjust sidebar max-height based on viewport
-                sidebar.style.maxHeight = (windowHeight - 40) + 'px';
-            }
-            
-            // Update on load and resize
-            updateStickyHeight();
-            window.addEventListener('resize', updateStickyHeight);
-            
-            // Update on scroll to ensure it stays sticky
-            window.addEventListener('scroll', function() {
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                const headerHeight = document.querySelector('.content-header')?.offsetHeight || 0;
-                
-                // Adjust top position based on scroll
-                if (scrollTop > headerHeight) {
-                    sidebar.style.top = '20px';
-                } else {
-                    sidebar.style.top = (headerHeight - scrollTop + 20) + 'px';
-                }
-            });
+        if (sidebar && mainContent) {
+            // Simple sticky behavior - no complex calculations needed
+            // The CSS sticky positioning will handle the rest
         }
     
         // Fix any overflowing elements
