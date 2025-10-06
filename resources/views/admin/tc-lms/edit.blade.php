@@ -447,19 +447,11 @@ window.addEventListener('load', function() {
                 // Ensure method spoofing is included
                 formData.append('_method', 'PUT');
                 
-                // Ensure all required fields are included
-                const siteTitle = document.querySelector('input[name="site_title"]');
-                const siteDepartment = document.querySelector('input[name="site_department"]');
-                const siteDescription = document.querySelector('input[name="site_description"]');
-                
-                console.log('Form field values:');
-                console.log('site_title:', siteTitle ? siteTitle.value : 'NOT FOUND');
-                console.log('site_department:', siteDepartment ? siteDepartment.value : 'NOT FOUND');
-                console.log('site_description:', siteDescription ? siteDescription.value : 'NOT FOUND');
-                
-                if (siteTitle) formData.append('site_title', siteTitle.value);
-                if (siteDepartment) formData.append('site_department', siteDepartment.value);
-                if (siteDescription) formData.append('site_description', siteDescription.value);
+                // Debug: Log all form data
+                console.log('Form data contents:');
+                for (let [key, value] of formData.entries()) {
+                    console.log(key + ':', value);
+                }
                 
                 // Debug: Log request details
                 console.log('Sending AJAX request with headers:');
