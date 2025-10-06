@@ -213,7 +213,12 @@ class TcLmsController extends Controller
     {
         $user = Auth::user();
         
+        // Debug: Log user information
+        \Log::info('Update request - User: ' . ($user ? $user->email : 'NULL') . ', Role: ' . ($user ? $user->user_role : 'NULL'));
+        \Log::info('LMS Site ID: ' . $tcLm->id . ', Faculty Code: ' . $tcLm->faculty_code);
+        
         if ($user->user_role !== 5) {
+            \Log::warning('User role mismatch - Expected: 5, Got: ' . $user->user_role);
             if ($request->ajax()) {
                 return response()->json(['success' => false, 'message' => 'Unauthorized access. Only Faculty can update LMS sites.'], 403);
             }
@@ -221,6 +226,7 @@ class TcLmsController extends Controller
         }
 
         if ($tcLm->faculty_code !== $user->email) {
+            \Log::warning('Faculty code mismatch - Site faculty: ' . $tcLm->faculty_code . ', User email: ' . $user->email);
             if ($request->ajax()) {
                 return response()->json(['success' => false, 'message' => 'Unauthorized access. You can only update your own LMS sites.'], 403);
             }
@@ -229,6 +235,9 @@ class TcLmsController extends Controller
 
         // Check if site can be edited
         if (!$tcLm->canBeEditedByFaculty()) {
+            // Log the current site status for debugging
+            \Log::info('Site cannot be edited. Status: ' . $tcLm->status . ', Can edit after approval: ' . ($tcLm->can_edit_after_approval ? 'true' : 'false'));
+            
             if ($request->ajax()) {
                 return response()->json(['success' => false, 'message' => 'This site cannot be edited. Only draft sites or approved sites with admin permission can be edited.'], 400);
             }
@@ -242,6 +251,8 @@ class TcLmsController extends Controller
         \Log::info('site_description: ' . ($request->site_description ?? 'NULL'));
         \Log::info('status: ' . ($request->status ?? 'NULL'));
         \Log::info('is_ajax: ' . ($request->ajax() ? 'true' : 'false'));
+        \Log::info('CSRF token: ' . ($request->header('X-CSRF-TOKEN') ?? 'NULL'));
+        \Log::info('Request method: ' . $request->method());
         
         $request->validate([
             'site_title' => 'required|string|max:255',

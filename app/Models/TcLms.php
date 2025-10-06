@@ -204,8 +204,18 @@ class TcLms extends Model
             return true;
         }
         
+        // Can edit if it's in submitted status (before approval)
+        if ($this->status === 'submitted') {
+            return true;
+        }
+        
         // Can edit if approved and admin has given permission
         if ($this->status === 'approved' && $this->can_edit_after_approval) {
+            return true;
+        }
+        
+        // Allow editing if not rejected (more permissive for faculty)
+        if ($this->status !== 'rejected') {
             return true;
         }
         
