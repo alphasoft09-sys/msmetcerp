@@ -211,8 +211,7 @@ class TcLmsController extends Controller
      */
     public function update(Request $request, TcLms $tcLm)
     {
-        try {
-            $user = Auth::user();
+        $user = Auth::user();
         
         // Debug: Log comprehensive request information
         \Log::info('=== LMS UPDATE REQUEST DEBUG START ===');
