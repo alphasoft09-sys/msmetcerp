@@ -275,10 +275,8 @@ class TcLmsController extends Controller
         \Log::info('CSRF token: ' . ($request->header('X-CSRF-TOKEN') ?? 'NULL'));
         \Log::info('Request method: ' . $request->method());
         
+        // Only validate site_contents and status, get other values from database
         $request->validate([
-            'site_title' => 'required|string|max:255',
-            'site_department' => 'required|string|exists:lms_departments,department_name',
-            'site_description' => 'nullable|string|max:1000',
             'site_contents' => 'nullable|string|max:16777215', // MEDIUMTEXT column limit (16MB)
             'status' => 'nullable|string|in:draft,submitted', // Allow status update
         ]);
@@ -315,10 +313,11 @@ class TcLmsController extends Controller
                     ->withInput();
             }
             
+            // Only update site_contents and keep existing values for other fields
             $updateData = [
-                'site_title' => $request->site_title,
-                'site_department' => $request->site_department,
-                'site_description' => $request->site_description,
+                'site_title' => $tcLm->site_title, // Keep existing value
+                'site_department' => $tcLm->site_department, // Keep existing value
+                'site_description' => $tcLm->site_description, // Keep existing value
                 'site_contents' => $siteContents, // Store as string directly, not JSON
             ];
             
