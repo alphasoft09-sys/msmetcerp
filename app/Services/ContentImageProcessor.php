@@ -159,15 +159,13 @@ class ContentImageProcessor
                     throw new \Exception('File has zero size');
                 }
                 
-                // Get the server's domain from the request
-                $serverUrl = request()->getSchemeAndHttpHost();
-                \Log::info('Server URL: ' . $serverUrl);
+                // Use the direct image route for more reliable access
+                $publicUrl = route('lms.images', [
+                    'siteId' => $lmsSiteId,
+                    'filename' => $filename
+                ]);
                 
-                // Create direct URL to the file using server domain
-                $publicUrl = $serverUrl . '/storage/' . $filePath;
-                
-                // Fix any double slashes in the path part (but not in the protocol)
-                $publicUrl = preg_replace('#([^:])//+#', '$1/', $publicUrl);
+                \Log::info('Using direct image route: ' . $publicUrl);
                 
                 // Log the URL generation
                 \Log::info('Generated URL: ' . $publicUrl);

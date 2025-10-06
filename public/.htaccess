@@ -1,7 +1,32 @@
-# Laravel .htaccess with Security Enhancements
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
 
-# PHP Configuration for Large File Uploads
-<IfModule mod_php.c>
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+    
+    # Allow direct access to storage directory
+    <IfModule mod_rewrite.c>
+        RewriteRule ^storage/(.*)$ storage/$1 [L]
+    </IfModule>
+</IfModule>
+
+# PHP Settings
+<IfModule mod_php7.c>
     php_value upload_max_filesize 50M
     php_value post_max_size 50M
     php_value max_execution_time 300
@@ -9,98 +34,31 @@
     php_value memory_limit 256M
 </IfModule>
 
-# Disable directory listing
-Options -Indexes
-
-# Prevent access to sensitive files
-<Files ".env">
-    Order allow,deny
-    Deny from all
-</Files>
-
-<Files "composer.json">
-    Order allow,deny
-    Deny from all
-</Files>
-
-<Files "composer.lock">
-    Order allow,deny
-    Deny from all
-</Files>
-
-<Files "package.json">
-    Order allow,deny
-    Deny from all
-</Files>
-
-<Files "package-lock.json">
-    Order allow,deny
-    Deny from all
-</Files>
-
-# Prevent access to backup files
-<FilesMatch "\.(bak|backup|old|orig|save|swp|sql|sqlite|sqlite3)$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
-
-# Prevent access to log files
-<FilesMatch "\.(log|txt)$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
-
-# Security Headers
-<IfModule mod_headers.c>
-    Header always set X-Frame-Options "DENY"
-    Header always set X-Content-Type-Options "nosniff"
-    Header always set X-XSS-Protection "1; mode=block"
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
-    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-    
-    # Remove server information
-    Header unset Server
-    Header unset X-Powered-By
+<IfModule mod_php8.c>
+    php_value upload_max_filesize 50M
+    php_value post_max_size 50M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+    php_value memory_limit 256M
 </IfModule>
 
-# Force HTTPS (uncomment for production)
-# RewriteEngine On
-# RewriteCond %{HTTPS} off
-# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-# Handle Authorization Header
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteCond %{HTTP:Authorization} .
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+# Add proper MIME types
+<IfModule mod_mime.c>
+    AddType image/jpeg .jpg .jpeg
+    AddType image/png .png
+    AddType image/gif .gif
+    AddType image/webp .webp
 </IfModule>
 
-# Redirect Trailing Slashes If Not A Folder...
-<IfModule mod_rewrite.c>
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} (.+)/$
-    RewriteRule ^ %1 [L,R=301]
-</IfModule>
-
-# Send Requests To Front Controller...
-<IfModule mod_rewrite.c>
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [L]
-</IfModule>
-
-# Disable server signature
-ServerSignature Off
-
-# Prevent access to hidden files
-<Files ".*">
-    Order allow,deny
-    Deny from all
-</Files>
-
-# Allow access to public assets
-<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
-    Order allow,deny
+# Allow access to images
+<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
     Allow from all
+    Satisfy any
 </FilesMatch>
+
+# Set proper headers for images
+<IfModule mod_headers.c>
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
+        Header set Cache-Control "max-age=2592000, public"
+    </FilesMatch>
+</IfModule>

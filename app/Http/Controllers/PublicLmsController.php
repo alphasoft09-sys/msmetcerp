@@ -441,9 +441,22 @@ class PublicLmsController extends Controller
             \Log::info('Found image URL: ' . $originalUrl);
             
             // If it's a relative URL starting with /storage
-            if (strpos($originalUrl, '/storage/') === 0) {
-                $fixedUrl = $serverUrl . $originalUrl;
-                \Log::info('Fixed to absolute URL: ' . $fixedUrl);
+            if (strpos($originalUrl, '/storage/lms-content-images/') !== false) {
+                // Extract site ID and filename from the path
+                preg_match('/\/storage\/lms-content-images\/(\d+)\/([^\/]+)$/', $originalUrl, $pathMatches);
+                
+                if (!empty($pathMatches) && count($pathMatches) >= 3) {
+                    $siteId = $pathMatches[1];
+                    $filename = $pathMatches[2];
+                    
+                    // Use our direct image route instead
+                    $fixedUrl = route('lms.images', ['siteId' => $siteId, 'filename' => $filename]);
+                    \Log::info('Fixed to direct image route: ' . $fixedUrl);
+                } else {
+                    // Fallback to absolute URL if pattern doesn't match
+                    $fixedUrl = $serverUrl . $originalUrl;
+                    \Log::info('Fixed to absolute URL: ' . $fixedUrl);
+                }
             }
             
             // Replace the URL in the img tag

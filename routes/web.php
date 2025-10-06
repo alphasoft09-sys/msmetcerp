@@ -560,6 +560,25 @@ Route::get('/images/admin-profiles/{type}/{filename}', [AdminProfileController::
 Route::get('/images/students/{filename}', [StudentManagementController::class, 'serveImage'])
     ->where('filename', '.*')
     ->name('images.students');
+    
+// Direct LMS image access route
+Route::get('/lms-images/{siteId}/{filename}', function ($siteId, $filename) {
+    $path = storage_path('app/public/lms-content-images/' . $siteId . '/' . $filename);
+    
+    if (!file_exists($path)) {
+        abort(404, 'Image not found');
+    }
+    
+    $mimeType = mime_content_type($path);
+    if (strpos($mimeType, 'image/') !== 0) {
+        abort(403, 'Not an image file');
+    }
+    
+    return response()->file($path, [
+        'Content-Type' => $mimeType,
+        'Cache-Control' => 'public, max-age=86400'
+    ]);
+})->name('lms.images');
 
 // Student routes
 Route::prefix('student')->group(function () {
