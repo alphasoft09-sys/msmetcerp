@@ -439,13 +439,16 @@ window.addEventListener('load', function() {
                     
                     // Submit form via AJAX
                     const form = document.getElementById('site-form');
-                    const formData = new FormData(form);
+                    const formData = new FormData();
                 
-                // Add status to form data
-                formData.append('status', status);
-                
-                // Ensure method spoofing is included
+                // Manually add all required fields
+                formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
                 formData.append('_method', 'PUT');
+                formData.append('site_title', document.querySelector('input[name="site_title"]').value);
+                formData.append('site_department', document.querySelector('input[name="site_department"]').value);
+                formData.append('site_description', document.querySelector('input[name="site_description"]').value);
+                formData.append('site_contents', document.getElementById('site-contents-input').value);
+                formData.append('status', status);
                 
                 // Debug: Log all form data
                 console.log('Form data contents:');
