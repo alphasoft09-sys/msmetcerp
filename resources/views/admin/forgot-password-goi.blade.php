@@ -234,6 +234,8 @@
         </div>
     </header>
     
+    @include('layouts.goi-navigation')
+    
     <!-- Admin Banner -->
     <div class="admin-banner">
         <i class="fas fa-shield-alt"></i> ADMINISTRATOR PASSWORD RECOVERY
