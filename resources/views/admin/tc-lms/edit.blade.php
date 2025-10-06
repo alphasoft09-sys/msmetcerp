@@ -447,6 +447,11 @@ window.addEventListener('load', function() {
                 // Ensure method spoofing is included
                 formData.append('_method', 'PUT');
                 
+                // Ensure all required fields are included
+                formData.append('site_title', document.querySelector('input[name="site_title"]').value);
+                formData.append('site_department', document.querySelector('input[name="site_department"]').value);
+                formData.append('site_description', document.querySelector('input[name="site_description"]').value);
+                
                 // Debug: Log request details
                 console.log('Sending AJAX request with headers:');
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
