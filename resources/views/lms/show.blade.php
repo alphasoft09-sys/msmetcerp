@@ -63,7 +63,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 3rem 0;
-            margin-bottom: 2rem;
+            margin-bottom: 0;
         }
         
         .seo-meta {
@@ -187,7 +187,7 @@
         #main-content {
             background-color: #f8f9fa;
             min-height: 100vh;
-            padding: 2rem 0;
+            padding: 0;
         }
         
         /* Content wrapper styling */
@@ -196,6 +196,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             overflow: hidden;
+            margin-top: 0;
         }
     </style>
 @endpush
@@ -203,7 +204,7 @@
 @section('content')
 
     <!-- Breadcrumb -->
-    <div class="container mt-3">
+    <!-- <div class="container mt-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('public.lms.index') }}">LMS Home</a></li>
@@ -211,7 +212,7 @@
                 <li class="breadcrumb-item active" aria-current="page">{{ $lmsSite->site_title }}</li>
             </ol>
         </nav>
-    </div>
+    </div> -->
 
     <!-- Content Header -->
     <div class="content-header">
@@ -241,7 +242,7 @@
 
     <!-- Main Content -->
     <main id="main-content">
-        <div class="container">
+        <div class="container py-4">
             <div class="content-wrapper">
                 <div class="row">
                     <div class="col-lg-8">
