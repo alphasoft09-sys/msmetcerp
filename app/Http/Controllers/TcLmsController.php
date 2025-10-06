@@ -166,6 +166,13 @@ class TcLmsController extends Controller
      */
     public function show(TcLms $tcLm)
     {
+        \Log::info('=== SHOW METHOD CALLED ===');
+        \Log::info('Request Method: ' . request()->method());
+        \Log::info('Request URL: ' . request()->fullUrl());
+        \Log::info('Is AJAX: ' . (request()->ajax() ? 'true' : 'false'));
+        \Log::info('LMS Site ID: ' . $tcLm->id);
+        \Log::info('=== SHOW METHOD DEBUG END ===');
+        
         $user = Auth::user();
         
         if ($user->user_role !== 5) {

@@ -444,6 +444,9 @@ window.addEventListener('load', function() {
                 // Add status to form data
                 formData.append('status', status);
                 
+                // Ensure method spoofing is included
+                formData.append('_method', 'PUT');
+                
                 // Debug: Log request details
                 console.log('Sending AJAX request with headers:');
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
