@@ -255,18 +255,17 @@
     <!-- JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('forgotPasswordForm');
+            const form = document.querySelector('form');
             const submitBtn = document.getElementById('submitBtn');
             const submitText = document.getElementById('submitText');
             const submitLoader = document.getElementById('submitLoader');
             
             // Form submission
             form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
                 const email = document.getElementById('email').value.trim();
                 
                 if (!email) {
+                    e.preventDefault();
                     showError('Please enter your email address');
                     return;
                 }
@@ -275,9 +274,6 @@
                 submitBtn.disabled = true;
                 submitText.style.display = 'none';
                 submitLoader.style.display = 'inline-flex';
-                
-                // Submit form
-                form.submit();
             });
             
             function showError(message) {

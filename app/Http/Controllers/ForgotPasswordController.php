@@ -44,10 +44,14 @@ class ForgotPasswordController extends Controller
             $user = User::where('email', $request->email)->first();
 
             if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No account found with this email address.'
-                ], 404);
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No account found with this email address.'
+                    ], 404);
+                }
+                
+                return back()->with('error', 'No account found with this email address.');
             }
 
             // Generate reset token
@@ -68,18 +72,26 @@ class ForgotPasswordController extends Controller
             // Send email
             Mail::to($user->email)->send(new PasswordResetMail($token, $user->name, 'admin'));
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Password reset link has been sent to your email address.'
-            ]);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Password reset link has been sent to your email address.'
+                ]);
+            }
+
+            return redirect()->route('admin.login')->with('success', 'Password reset link has been sent to your email address.');
 
         } catch (\Exception $e) {
             \Log::error('Admin password reset error: ' . $e->getMessage());
             
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to send reset link. Please try again.'
-            ], 500);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send reset link. Please try again.'
+                ], 500);
+            }
+            
+            return back()->with('error', 'Failed to send reset link. Please try again.');
         }
     }
 
@@ -96,10 +108,14 @@ class ForgotPasswordController extends Controller
             $student = StudentLogin::where('email', $request->email)->first();
 
             if (!$student) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No account found with this email address.'
-                ], 404);
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No account found with this email address.'
+                    ], 404);
+                }
+                
+                return back()->with('error', 'No account found with this email address.');
             }
 
             // Generate reset token
@@ -120,18 +136,26 @@ class ForgotPasswordController extends Controller
             // Send email
             Mail::to($student->email)->send(new PasswordResetMail($token, $student->name, 'student'));
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Password reset link has been sent to your email address.'
-            ]);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Password reset link has been sent to your email address.'
+                ]);
+            }
+
+            return redirect()->route('student.login')->with('success', 'Password reset link has been sent to your email address.');
 
         } catch (\Exception $e) {
             \Log::error('Student password reset error: ' . $e->getMessage());
             
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to send reset link. Please try again.'
-            ], 500);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send reset link. Please try again.'
+                ], 500);
+            }
+            
+            return back()->with('error', 'Failed to send reset link. Please try again.');
         }
     }
 
